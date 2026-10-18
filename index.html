@@ -1,0 +1,692 @@
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>STAN WOOD — Ікони ручної різьби</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&display=swap">
+<style>
+:root{
+  color-scheme: dark;
+  --cream:#ffedd7; --walnut:#100904; --bark:#382416; --cork:#40372e; --drift:#6c5f51; --ember:#dc5000;
+  --font:'Inter','Helvetica Neue',Helvetica,Arial,sans-serif;
+  --g:24px;
+  --t-display:clamp(40px,3.55vw,51px);
+  --t-heading:clamp(32px,2.85vw,41px);
+  --t-body:clamp(20px,2vw,29px);
+  --t-sub:18px;
+  --t-label:12px;
+}
+@media (max-width:760px){ :root{ --g:16px; --t-label:11px; --t-sub:15px; } }
+html{background:var(--walnut);scroll-behavior:smooth}
+@media (prefers-reduced-motion:reduce){ html{scroll-behavior:auto} }
+body{margin:0;background:var(--walnut);color:var(--cream);font:500 14px/1.2 var(--font);font-feature-settings:'ss01' 1;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+main{overflow-x:clip}
+h1,h2,h3,p,dl,dd,ol,figure{margin:0}
+h1,h2,h3{font-weight:500;text-wrap:balance}
+a{color:var(--cream)}
+:focus-visible{outline:1px dashed var(--cream);outline-offset:4px}
+img{max-width:100%}
+
+/* type roles */
+.label{font-size:var(--t-label);line-height:1.2}
+.h-display{font-size:var(--t-display);line-height:.9}
+.h-heading{font-size:var(--t-heading);line-height:.9}
+.body{font-size:var(--t-body);line-height:1.26;font-weight:400;max-width:22em}
+.h-heading span,.h-display span{display:block}
+
+/* layering: bench (0) · 3D canvas (1) · text (2) · nav (5) */
+#stage{position:fixed;left:0;top:0;z-index:1;pointer-events:none;display:block}
+.layer{position:relative;z-index:2}
+
+/* controls */
+.pill{display:inline-flex;align-items:center;justify-content:center;gap:10px;box-sizing:border-box;min-height:44px;padding:14px 24px;border-radius:36px;background:var(--bark);color:var(--cream);font:500 12px/1 var(--font);text-decoration:none;border:0;cursor:pointer;white-space:nowrap}
+.ghost{display:inline-flex;align-items:center;justify-content:center;gap:10px;box-sizing:border-box;min-height:44px;padding:14px 24px;border-radius:22.5px;background:transparent;border:1px solid var(--cream);color:var(--cream);font:500 12px/1 var(--font);text-decoration:none;cursor:pointer}
+.ulink{display:inline-flex;align-items:center;min-height:44px;font-size:12px;line-height:1;color:var(--cream);text-underline-offset:4px}
+.rule{height:0;border-top:1px dashed var(--cork)}
+
+/* nav */
+.nav{position:fixed;top:0;left:0;right:0;z-index:5;display:flex;justify-content:space-between;align-items:center;padding:calc(env(safe-area-inset-top,0px) + 4px) var(--g) 4px;transition:background .4s}
+.nav.is-solid{background:linear-gradient(rgba(16,9,4,.92),rgba(16,9,4,.7) 60%,rgba(16,9,4,0))}
+.nav a{display:inline-flex;align-items:center;min-height:44px;color:var(--cream);text-decoration:none;font-size:12px;line-height:1}
+.nav .brand{font-size:14px}
+.nav nav{display:flex;gap:31px}
+.nav nav a.is-active{text-decoration-line:underline;text-decoration-style:dashed;text-decoration-color:var(--drift);text-underline-offset:6px}
+
+/* shared section frame */
+.sec{position:relative;box-sizing:border-box;padding:24px var(--g)}
+.sec-head{display:flex;flex-direction:column;gap:14px}
+.sec-head .row{display:flex;justify-content:space-between;gap:18px}
+
+/* 3D slots: empty boxes the icon flies to; images show only when 3D is unavailable */
+.slot{position:relative}
+.slot .fallback{position:absolute;inset:0;width:100%;height:100%;object-fit:contain}
+.has-3d .slot .fallback{visibility:hidden}
+
+/* hero */
+.hero{position:relative;height:100vh;height:100svh;min-height:620px}
+.hero-stage{position:absolute;inset:0;overflow:hidden}
+.bench{position:absolute;inset:0;background:linear-gradient(180deg,rgba(16,9,4,.45) 0%,rgba(16,9,4,0) 30%,rgba(16,9,4,0) 70%,rgba(16,9,4,.5) 100%),url('img/hero-bg.webp') 50% 84%/cover no-repeat}
+.slot-hero{position:absolute;left:53.33%;top:22.11%;width:26.67%;height:56.89%}
+.slot-hero .fallback{transform:rotate(-6deg)}
+.hero-copy{position:absolute;left:var(--g);top:calc(env(safe-area-inset-top,0px) + 96px);display:flex;flex-direction:column;gap:18px}
+.wordmark{font-size:clamp(88px,12.5vw,176px);line-height:.88;font-weight:500}
+.wordmark span{display:block}
+.hero-sub{font-size:24px;line-height:1.09}
+.vlabel{position:absolute;right:14px;top:50%;transform:translateY(-50%);writing-mode:vertical-rl;font-size:11px;line-height:1;margin:0}
+.cta{align-self:flex-start;margin-top:10px;display:inline-flex;align-items:center;box-sizing:border-box;height:52px;min-height:0;padding:0 28px;border-radius:36px;background:var(--ember);color:var(--cream);font:500 12px/1 var(--font);letter-spacing:.06em;text-decoration:none}
+.credit{color:var(--ember)}
+.scroll-cue{position:absolute;left:50%;bottom:var(--g);transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:10px;font-size:10px}
+.scroll-cue i{display:block;width:0;height:36px;border-left:1px dashed var(--drift)}
+
+/* reveal sections (object turned on the dark) */
+.reveal{min-height:100vh;display:flex;flex-direction:column}
+#object{background:linear-gradient(90deg,rgba(16,9,4,.9) 0%,rgba(16,9,4,.62) 45%,rgba(16,9,4,.5) 100%),url('tex/bench1.webp') 82% center/cover no-repeat}
+.reveal-grid{flex:1;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,40%) minmax(0,1fr);column-gap:18px;padding-block:41px 24px}
+.col-left{display:flex;flex-direction:column;justify-content:space-between;gap:41px}
+.col-right{display:flex;flex-direction:column;justify-content:flex-end;align-items:flex-start;gap:31px}
+.slot-center{align-self:center;height:72vh;min-height:420px}
+.figcap{position:absolute;left:0;right:0;bottom:-28px;text-align:center;font-size:10px}
+.specs{display:flex;flex-direction:column;font-size:12px}
+.specs div{display:flex;justify-content:space-between;gap:18px;padding:12px 0;border-top:1px dashed var(--cork)}
+.specs div:last-child{border-bottom:1px dashed var(--cork)}
+.specs dd{text-align:right}
+.aud{display:flex;flex-direction:column}
+.aud div{display:flex;flex-direction:column;gap:10px;padding:18px 0;border-top:1px dashed var(--cork)}
+.aud div:last-child{border-bottom:1px dashed var(--cork)}
+.aud strong{font-size:var(--t-sub);line-height:1.05;font-weight:500}
+
+/* collection */
+.collection .coll-head{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));column-gap:18px;padding-block:68px}
+.slot-ghost-a{position:absolute;right:12%;top:0;width:26%;height:56vh;pointer-events:none}
+.cards{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:18px;padding-bottom:45px}
+.card{display:flex;flex-direction:column;gap:18px;padding:24px;border:1px solid var(--cork);border-radius:12px}
+.card-media{aspect-ratio:3/4;display:flex;align-items:center;justify-content:center;perspective:800px}
+.card-media img{width:100%;height:100%;object-fit:contain;display:block;transition:transform .5s cubic-bezier(.2,.7,.2,1);transform-style:preserve-3d}
+.card-meta{display:flex;flex-direction:column;gap:8px}
+.card-meta h3{font-size:var(--t-sub);line-height:1}
+.card-foot{display:flex;justify-content:space-between;align-items:center;gap:12px}
+.num{font-size:10px;line-height:1.2}
+
+/* workshop: pinned while the icon is carved stage by stage */
+.process{height:420vh;padding:0}
+.process-pin{position:sticky;top:0;height:100vh;height:100dvh;box-sizing:border-box;padding:calc(env(safe-area-inset-top,0px) + 56px) var(--g) 24px;display:flex;flex-direction:column}
+.process-grid{flex:1;position:relative;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);column-gap:18px;align-items:center}
+.process-copy{display:flex;flex-direction:column;gap:31px}
+.stages{list-style:none;padding:0;display:flex;flex-direction:column}
+.stage{display:grid;grid-template-columns:72px minmax(0,1fr);column-gap:18px;padding:18px 0;border-top:1px dashed var(--cork);opacity:.42;transition:opacity .4s}
+.stage:last-child{border-bottom:1px dashed var(--cork)}
+.stage.is-active{opacity:1}
+.stage .num{padding-top:6px;font-size:12px}
+.stage h3{font-size:var(--t-heading);line-height:.9}
+.stage-body{display:grid;grid-template-rows:0fr;transition:grid-template-rows .45s cubic-bezier(.2,.7,.2,1)}
+.stage-body>div{overflow:hidden}
+.stage-body p{padding-top:14px}
+.stage.is-active .stage-body{grid-template-rows:1fr}
+.slot-process{height:70vh;min-height:380px}
+.stage-count{font-variant-numeric:tabular-nums}
+
+/* commission */
+.commission{min-height:100vh;display:flex;flex-direction:column}
+.slot-ghost-b{position:absolute;right:10%;top:0;width:24%;height:50vh;pointer-events:none}
+.comm-intro{display:flex;flex-direction:column;align-items:center;gap:18px;text-align:center;max-width:720px;margin:0 auto;padding-top:68px}
+.comm-grid{flex:1;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));column-gap:18px;padding-block:45px 24px}
+.comm-left{display:flex;flex-direction:column;justify-content:flex-start;gap:45px;padding-right:68px}
+.promo{font-size:14px;line-height:1.4;padding:14px 18px;border-radius:10px;background:rgba(220,80,0,.12);border:1px solid var(--ember);color:var(--cream)}
+.contacts{display:flex;flex-direction:column}
+.contacts div{display:flex;justify-content:space-between;align-items:baseline;gap:18px;padding:14px 0;border-top:1px dashed var(--cork)}
+.contacts div:last-child{border-bottom:1px dashed var(--cork)}
+.contacts dt{font-size:12px}
+.contacts dd{font-size:18px;user-select:all}
+.comm-right{display:flex;flex-direction:column;gap:24px;padding-left:68px;position:sticky;top:12vh;align-self:start}
+.slot-commission{height:42vh;min-height:300px}
+form{display:flex;flex-direction:column;gap:31px}
+.field{display:flex;flex-direction:column;gap:8px}
+.field label,.field legend{font-size:12px;line-height:1.2;padding:0}
+.field input{width:100%;box-sizing:border-box;min-height:44px;padding:10px 36px 10px 2px;background:transparent;border:0;border-bottom:1px solid var(--cream);border-radius:0;color:var(--cream);font:400 18px/1.2 var(--font)}
+.field input::placeholder{color:var(--drift)}
+fieldset.field{border:0;margin:0;padding:0}
+.choices{display:flex;gap:12px;margin-top:4px}
+.ghost[aria-pressed="false"]{border-color:var(--cork)}
+.ghost .dot{width:6px;height:6px;border-radius:9999px;background:transparent}
+.ghost[aria-pressed="true"] .dot{background:var(--cream)}
+.submit-row{display:flex;align-items:center;gap:24px;flex-wrap:wrap}
+
+/* footer */
+.foot{position:relative;padding:0 var(--g) 24px;display:flex;flex-direction:column;gap:24px}
+.foot-row{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));column-gap:18px;align-items:end}
+.foot-mark{font-size:var(--t-display);line-height:.9}
+.foot nav{display:flex;gap:31px;flex-wrap:wrap}
+.foot nav a{display:inline-flex;align-items:center;min-height:44px;font-size:12px;line-height:1;text-decoration:none}
+.foot-meta{display:flex;flex-direction:column;align-items:flex-end;gap:8px;font-size:12px}
+.legal{font:500 10px/1.2 Arial,system-ui,sans-serif}
+
+/* phone */
+@media (max-width:760px){
+  .nav nav{gap:18px}
+  .nav .hide-sm{display:none}
+  .nav a{font-size:11px}
+  .hero{height:100svh;min-height:600px}
+  .bench{background:linear-gradient(180deg,rgba(16,9,4,.35) 0%,rgba(16,9,4,0) 35%),url('img/hero-bg-m.webp') 50% 100%/cover no-repeat}
+  .hero-copy{position:absolute;left:var(--g);top:calc(env(safe-area-inset-top,0px) + 17.5svh);gap:10px}
+  .hero-copy .label{font-size:13px;letter-spacing:.04em}
+  .wordmark{font-size:76px;font-weight:400}
+  .hero-sub{font-size:18px}
+  .cta{height:42px;padding:0 22px;border-radius:5px;background:#b9601f;letter-spacing:.05em;gap:16px;margin-top:6px}
+  .slot-hero{left:37.5%;top:52%;width:57%;height:32%}
+  .vlabel,.scroll-cue{display:none}
+
+  #object::before{content:'';position:absolute;top:0;right:0;width:100%;height:480px;pointer-events:none;background:linear-gradient(90deg,rgba(16,9,4,.45),rgba(16,9,4,.1)),url('tex/bench1.webp') 100% 0/auto 480px no-repeat;-webkit-mask-image:linear-gradient(180deg,#000 65%,transparent);mask-image:linear-gradient(180deg,#000 65%,transparent)}
+  .reveal{min-height:0;padding-top:45px}
+  .reveal-grid{display:flex;flex-direction:column;gap:24px;padding-block:24px 0}
+  .col-left,.col-right{display:contents}
+  .reveal .h-heading{order:1}
+  .slot-center{order:2;align-self:stretch;height:54svh;min-height:340px;margin-bottom:28px}
+  .reveal .body{order:3}
+  .reveal .ghost{order:4;align-self:stretch}
+  .specs,.aud{order:5}
+
+  .collection .coll-head{grid-template-columns:1fr;row-gap:24px;padding-block:24px}
+  .slot-ghost-a{right:0;width:60%;height:40vh}
+  .cards{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+  .card{padding:12px;gap:12px}
+  .card-meta h3{font-size:14px}
+
+  .process-grid{display:flex;flex-direction:column;justify-content:flex-start;gap:14px;padding-top:14px}
+  .slot-process{order:-1;height:32vh;height:32svh;min-height:0;width:100%}
+  .process-copy{gap:14px}
+  .process-copy .h-display{font-size:32px}
+  .stage{grid-template-columns:40px minmax(0,1fr);padding:12px 0}
+  .stage h3{font-size:22px}
+  .stage-body p{font-size:17px;padding-top:10px}
+
+  .comm-intro{padding-top:24px;gap:14px}
+  .comm-grid{grid-template-columns:1fr;row-gap:41px;padding-block:24px}
+  .comm-left{padding-right:0;gap:31px}
+  .comm-left{display:contents}
+  .contacts{order:4}
+  .comm-right{display:contents}
+  .slot-commission{order:1;height:38svh;min-height:260px}
+  .promo{order:2}
+  form{order:3;padding-left:0;gap:24px}
+  .submit-row .pill{width:100%}
+  .contacts dd{font-size:14px}
+
+  .foot-row{grid-template-columns:1fr;row-gap:18px}
+  .foot-meta{align-items:flex-start}
+}
+@media (min-width:761px) and (max-width:1100px){
+  .cards{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .comm-left{padding-right:24px} .comm-right{padding-left:24px}
+}
+</style>
+
+<canvas id="stage" aria-hidden="true"></canvas>
+
+<header class="nav" id="nav">
+  <a class="brand" href="#intro">STAN WOOD</a>
+  <nav aria-label="Основна навігація">
+    <a class="hide-sm is-active" href="#intro" data-target="intro">ГОЛОВНА</a>
+    <a href="#icons" data-target="icons">ІКОНИ</a>
+    <a href="#workshop" data-target="workshop">МАЙСТЕРНЯ</a>
+    <a href="#commission" data-target="commission">КОНТАКТИ</a>
+  </nav>
+</header>
+
+<main>
+
+<section class="hero" id="intro" data-nav="intro">
+  <div class="hero-stage" id="heroStage">
+    <div class="bench" id="bench">
+      <div class="slot slot-hero" data-slot data-rx="0" data-ry="-0.09" data-rz="0" data-shadow="1" data-fit="1" role="img" aria-label="Різьблена ікона Христа на тлі теплої стіни та дерев'яного столу">
+        <img class="fallback" src="img/panel-christ.webp" alt="">
+      </div>
+    </div>
+  </div>
+  <div class="hero-copy layer">
+    <p class="label">ІКОНИ РУЧНОЇ РІЗЬБИ ДЛЯ РОДИНИ ТА ХРАМУ</p>
+    <h1 class="wordmark"><span>STAN</span><span>WOOD</span></h1>
+    <p class="hero-sub">МАЙСТЕРНЯ РІЗЬБИ ПО ДЕРЕВУ</p>
+    <a class="cta" href="#icons">ПЕРЕГЛЯНУТИ ІКОНИ →</a>
+  </div>
+  <p class="vlabel layer" aria-hidden="true">STAN WOOD · УЖГОРОД · ІС ХС · РІЗЬБЛЕНИЙ РЕЛЬЄФ</p>
+  <div class="scroll-cue layer" aria-hidden="true"><span>ГОРТАЙТЕ</span><i></i></div>
+</section>
+
+<section class="sec reveal" id="object" data-nav="intro">
+  <div class="sec-head layer"><div class="rule"></div><div class="row label"><span>01 — СУТЬ РЕЧІ</span><span>МАЛ. 01</span></div></div>
+  <div class="reveal-grid">
+    <div class="col-left">
+      <h2 class="h-heading layer"><span>НЕ ДРУК.</span><span>НЕ ШТАМП.</span><span>РУЧНА РІЗЬБА.</span></h2>
+      <dl class="specs layer">
+        <div><dt>ДЕРЕВО</dt><dd>[ПОРОДА ДЕРЕВА]</dd></div>
+        <div><dt>СПОСІБ</dt><dd>РУЧНЕ РІЗЬБЛЕННЯ</dd></div>
+        <div><dt>РОЗМІРИ</dt><dd>ВІД [MIN] ДО [MAX] СМ</dd></div>
+        <div><dt>ПОКРИТТЯ</dt><dd>[ОЛІЯ / ВІСК / ЛАК]</dd></div>
+      </dl>
+    </div>
+    <div class="slot slot-center" data-slot data-rx="0.05" data-ry="-0.26" role="img" aria-label="Ікона Христа, трохи повернута: піднятий німб із хрестом, літери ІС ХС і промені, вирізьблені в дошці">
+      <img class="fallback" src="img/panel-christ.webp" alt="">
+      <p class="figcap layer">МАЛ. 01 — ІКОНА ХРИСТА · РІЗЬБЛЕНИЙ РЕЛЬЄФ</p>
+    </div>
+    <div class="col-right">
+      <p class="body layer">Кожна ікона починається з цільної дошки. Зображення вирізається вручну — німб, літери, кожна лінія — тому двох однакових не буває.</p>
+    </div>
+  </div>
+</section>
+
+<section class="sec reveal" id="families" data-nav="intro">
+  <div class="sec-head layer"><div class="rule"></div><div class="row label"><span>02 — ДЛЯ КОГО</span><span>МАЛ. 02</span></div></div>
+  <div class="reveal-grid">
+    <div class="col-left">
+      <h2 class="h-heading layer"><span>ДЛЯ РОДИНИ.</span><span>ДЛЯ ХРАМУ.</span></h2>
+      <div class="aud layer">
+        <div><span class="label">РОДИНАМ</span><strong>ХРЕЩЕННЯ · ВІНЧАННЯ · ІМЕНИНИ · ІКОНА В ДІМ</strong></div>
+        <div><span class="label">ХРАМАМ</span><strong>ІКОНИ ПІД ПОСВЯТУ, СТІНУ ТА РОЗМІР ВАШОЇ ПАРАФІЇ</strong></div>
+      </div>
+    </div>
+    <div class="slot slot-center" data-slot data-rx="-0.08" data-ry="0.74" data-rz="0.02" role="img" aria-label="Та сама ікона, повернута на три чверті — видно товщину дошки">
+      <img class="fallback" src="img/panel-mother-34c.webp" alt="">
+      <p class="figcap layer">МАЛ. 02 — РАКУРС ТРИ ЧВЕРТІ · ТОВЩИНА ДОШКИ</p>
+    </div>
+    <div class="col-right">
+      <p class="body layer">Невелика ікона — у подарунок на хрестини. Великий образ — для храму. Та сама ретельність і увага до деталей — незалежно від розміру.</p>
+      <a class="ghost layer" href="#commission">ДІЗНАТИСЯ ПРО ЗАМОВЛЕННЯ ДЛЯ ХРАМУ</a>
+    </div>
+  </div>
+</section>
+
+<section class="sec collection" id="icons" data-nav="icons">
+  <div class="slot slot-ghost-a" data-slot data-op="0" data-rx="-0.5" data-ry="1.5" data-rz="0.25" aria-hidden="true"></div>
+  <div class="sec-head layer"><div class="rule"></div><div class="row label"><span>03 — КОЛЕКЦІЯ</span><span>ПІД ЗАМОВЛЕННЯ</span></div></div>
+  <div class="coll-head">
+    <h2 class="h-display layer">КОЛЕКЦІЯ.</h2>
+    <p class="body layer">Кожна ікона виготовляється під замовлення. Оберіть сюжет нижче — або принесіть власний: іменну ікону родини чи храмове свято.</p>
+  </div>
+  <div class="cards layer">
+    <article class="card">
+      <div class="card-media"><img src="img/panel-christ-sm.webp" alt="Різьблена ікона Христа з німбом, хрестом і літерами ІС ХС" loading="lazy"></div>
+      <div class="rule"></div>
+      <div class="card-meta"><span class="num">№ 01</span><h3>ХРИСТОС ВСЕДЕРЖИТЕЛЬ</h3><span class="label">ІС ХС · ДЛЯ ДОМУ ЧИ ХРАМУ</span></div>
+      <div class="card-foot"><span class="label">ВІД [ЦІНА]</span><a class="ulink" href="#commission" data-subject="Христос Вседержитель">ДІЗНАТИСЯ ЦІНУ</a></div>
+    </article>
+    <article class="card">
+      <div class="card-media"><img src="img/panel-mother.webp" alt="Різьблена ікона Богородиці з Дитям, ніжність щока до щоки" loading="lazy"></div>
+      <div class="rule"></div>
+      <div class="card-meta"><span class="num">№ 02</span><h3>БОГОРОДИЦЯ</h3><span class="label">МР ΘΥ · З ДИТЯМ</span></div>
+      <div class="card-foot"><span class="label">ВІД [ЦІНА]</span><a class="ulink" href="#commission" data-subject="Богородиця">ДІЗНАТИСЯ ЦІНУ</a></div>
+    </article>
+    <article class="card">
+      <div class="card-media"><img src="img/panel-saint.webp" alt="Різьблена іменна ікона священномученика Петра Ороса" loading="lazy"></div>
+      <div class="rule"></div>
+      <div class="card-meta"><span class="num">№ 03</span><h3>ІМЕННІ ІКОНИ СВЯТИХ</h3><span class="label">НЕБЕСНИЙ ПОКРОВИТЕЛЬ РОДИНИ ЧИ ПАРАФІЇ</span></div>
+      <div class="card-foot"><span class="label">ВІД [ЦІНА]</span><a class="ulink" href="#commission" data-subject="Іменна ікона святого">ДІЗНАТИСЯ ЦІНУ</a></div>
+    </article>
+    <article class="card">
+      <div class="card-media"><img src="img/panel-theotokos-gilded.webp" alt="Різьблена ікона Богородиці з Дитям на темному горісі із золоченням" loading="lazy"></div>
+      <div class="rule"></div>
+      <div class="card-meta"><span class="num">№ 04</span><h3>БОГОРОДИЦЯ, ТЕМНИЙ ГОРІХ</h3><span class="label">РІЗЬБЛЕННЯ ІЗ ЗОЛОЧЕННЯМ</span></div>
+      <div class="card-foot"><span class="label">ВІД [ЦІНА]</span><a class="ulink" href="#commission" data-subject="Богородиця, темний горіх із золоченням">ДІЗНАТИСЯ ЦІНУ</a></div>
+    </article>
+  </div>
+</section>
+
+<section class="sec process" id="workshop" data-nav="workshop">
+  <div class="process-pin" id="pin">
+    <div class="sec-head layer"><div class="rule"></div><div class="row label"><span>04 — МАЙСТЕРНЯ</span><span class="stage-count" aria-live="polite">ЕТАП <span id="stageNum">01</span> / 04</span></div></div>
+    <div class="process-grid">
+      <div class="process-copy layer">
+        <h2 class="h-display">ВІД ДОШКИ ДО ІКОНИ.</h2>
+        <ol class="stages">
+          <li class="stage is-active"><span class="num">01</span><div><h3>ДОШКА</h3><div class="stage-body"><div><p class="body">Дошку з цільного масиву обирають за текстурою й залишають вистоятись, щоб готова ікона служила поколінням.</p></div></div></div></li>
+          <li class="stage"><span class="num">02</span><div><h3>КІВОТ</h3><div class="stage-body"><div><p class="body">У дошці вирізається поле, залишаючи піднятий край — ківот, що обрамляє святий образ.</p></div></div></div></li>
+          <li class="stage"><span class="num">03</span><div><h3>ОБРАЗ</h3><div class="stage-body"><div><p class="body">Німб, хрест і літери вирізьблюються вручну, за канонами іконописної традиції.</p></div></div></div></li>
+          <li class="stage"><span class="num">04</span><div><h3>ОЗДОБЛЕННЯ</h3><div class="stage-body"><div><p class="body">Дерево покривають, щоб підкреслити текстуру. Ікона готова до освячення та дому.</p></div></div></div></li>
+        </ol>
+      </div>
+      <div class="slot slot-process" data-slot data-pinned data-rx="0.04" data-ry="-0.32" role="img" aria-label="Ікона на кожному етапі різьблення — від простої дошки до готового образу">
+        <img class="fallback" src="img/panel-christ.webp" alt="">
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="sec commission" id="commission" data-nav="commission">
+  <div class="slot slot-ghost-b" data-slot data-op="0" data-rx="0.3" data-ry="-1.4" data-rz="-0.2" aria-hidden="true"></div>
+  <div class="sec-head layer"><div class="rule"></div><div class="row label"><span>05 — ЗАМОВЛЕННЯ</span><span>ВІДПОВІДАЄМО НА КОЖЕН ЗАПИТ</span></div></div>
+  <div class="comm-intro layer">
+    <h2 class="h-display">ЗАМОВИТИ ІКОНУ.</h2>
+    <p class="body">Напишіть, для кого ікона, який святий чи свято, де вона висітиме. Ми відповімо з розмірами, термінами та ціною.</p>
+  </div>
+  <div class="comm-grid layer">
+    <div class="comm-left">
+      <form id="form" novalidate>
+      <fieldset class="field">
+        <legend>ІКОНА ДЛЯ</legend>
+        <div class="choices" id="choices">
+          <button type="button" class="ghost" aria-pressed="true" data-for="family"><span class="dot"></span>РОДИНИ</button>
+          <button type="button" class="ghost" aria-pressed="false" data-for="church"><span class="dot"></span>ХРАМУ</button>
+        </div>
+      </fieldset>
+      <div class="field"><label for="f-subject">ЯКУ ІКОНУ ВИ УЯВЛЯЄТЕ</label><input id="f-subject" name="subject" type="text" placeholder="Святий, свято, розмір, де вона висітиме"></div>
+      <div class="field"><label for="f-name">ВАШЕ ІМ'Я</label><input id="f-name" name="name" type="text" autocomplete="name" required></div>
+      <div class="field"><label for="f-contact">ТЕЛЕФОН АБО INSTAGRAM АБО EMAIL</label><input id="f-contact" name="contact" type="text" autocomplete="tel" required></div>
+      <div class="submit-row">
+        <button class="pill" type="submit">НАДІСЛАТИ ЗАПИТ</button>
+        <p class="label" id="formStatus" role="status"></p>
+      </div>
+      </form>
+      <dl class="contacts">
+        <div><dt>ТЕЛЕФОН</dt><dd>+380 68 301 05 23</dd></div>
+        <div><dt>МАЙСТЕРНЯ</dt><dd>УЖГОРОД</dd></div>
+        <div><dt>INSTAGRAM</dt><dd>@STANWOOD_WORK</dd></div>
+      </dl>
+    </div>
+    <div class="comm-right">
+      <div class="slot slot-commission" data-slot data-rx="0.04" data-ry="-0.18" data-rz="0.01" data-fit="0.88" role="img" aria-label="Готова ікона Христа, що залишається на екрані біля форми замовлення">
+        <img class="fallback" src="img/panel-christ.webp" alt="">
+      </div>
+      <p class="promo">★ ЗНИЖКА 10% — напишіть, що ви з веб-сайту, і отримаєте знижку 10% на перше замовлення.</p>
+    </div>
+  </div>
+</section>
+
+<footer class="foot layer" data-nav="commission">
+  <div class="rule"></div>
+  <div class="foot-row">
+    <span class="foot-mark">STAN WOOD</span>
+    <nav aria-label="Футер">
+      <a href="#intro">ГОЛОВНА</a><a href="#icons">ІКОНИ</a><a href="#workshop">МАЙСТЕРНЯ</a><a href="#commission">КОНТАКТИ</a>
+    </nav>
+    <div class="foot-meta"><span class="credit">РУЧНА РОБОТА · УЖГОРОД</span><span>© 2026 STAN WOOD</span></div>
+  </div>
+  <p class="legal">* ІКОНИ НА ЦІЙ СТОРІНЦІ — ВІЗУАЛІЗАЦІЇ. КОЖНА ІКОНА ВИГОТОВЛЯЄТЬСЯ ПІД ЗАМОВЛЕННЯ, ТОМУ КОЖНА — УНІКАЛЬНА.</p>
+</footer>
+
+</main>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+(function () {
+  var root = document.documentElement;
+  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var finePointer = window.matchMedia('(pointer: fine)').matches;
+  var clamp = function (v, a, b) { return Math.max(a, Math.min(b, v)); };
+  var smooth = function (e0, e1, x) { var t = clamp((x - e0) / (e1 - e0), 0, 1); return t * t * (3 - 2 * t); };
+
+  /* ---- nav ---- */
+  var nav = document.getElementById('nav');
+  var navLinks = [].slice.call(nav.querySelectorAll('a[data-target]'));
+  var navSecs = [].slice.call(document.querySelectorAll('[data-nav]'));
+  var currentNav = '';
+  function updateNav() {
+    var probe = window.innerHeight * 0.45, cur = 'intro';
+    navSecs.forEach(function (s) { var r = s.getBoundingClientRect(); if (r.top <= probe && r.bottom > probe) cur = s.getAttribute('data-nav'); });
+    if (cur !== currentNav) {
+      currentNav = cur;
+      navLinks.forEach(function (a) {
+        var on = a.getAttribute('data-target') === cur;
+        a.classList.toggle('is-active', on);
+        if (on) a.setAttribute('aria-current', 'true'); else a.removeAttribute('aria-current');
+      });
+    }
+    nav.classList.toggle('is-solid', window.scrollY > window.innerHeight * 0.5);
+  }
+
+  /* ---- workshop stages ---- */
+  var process = document.getElementById('workshop');
+  var pin = document.getElementById('pin');
+  var stageEls = [].slice.call(process.querySelectorAll('.stage'));
+  var stageNum = document.getElementById('stageNum');
+  var activeStage = 0;
+  function stageProgress() {
+    var r = process.getBoundingClientRect(), span = r.height - window.innerHeight;
+    return span > 0 ? clamp(-r.top / span, 0, 1) : 0;
+  }
+  function updateStages(s) {
+    var i = Math.min(3, Math.floor(s + 0.5));
+    if (i !== activeStage) {
+      activeStage = i;
+      stageEls.forEach(function (el, k) { el.classList.toggle('is-active', k === i); });
+      stageNum.textContent = '0' + (i + 1);
+    }
+    return i;
+  }
+
+  /* ---- form ---- */
+  var choices = [].slice.call(document.querySelectorAll('#choices button'));
+  choices.forEach(function (b) {
+    b.addEventListener('click', function () { choices.forEach(function (c) { c.setAttribute('aria-pressed', c === b ? 'true' : 'false'); }); });
+  });
+  [].slice.call(document.querySelectorAll('[data-subject]')).forEach(function (a) {
+    a.addEventListener('click', function () { document.getElementById('f-subject').value = a.getAttribute('data-subject'); });
+  });
+  var form = document.getElementById('form'), statusEl = document.getElementById('formStatus');
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+    var name = document.getElementById('f-name'), contact = document.getElementById('f-contact');
+    if (!name.value.trim()) { statusEl.textContent = 'БУДЬ ЛАСКА, ВКАЖІТЬ ВАШЕ ІМ\'Я.'; name.focus(); return; }
+    if (!contact.value.trim()) { statusEl.textContent = 'ВКАЖІТЬ ТЕЛЕФОН, INSTAGRAM АБО EMAIL, ЩОБ МИ МОГЛИ ВІДПОВІСТИ.'; contact.focus(); return; }
+    statusEl.textContent = 'ДЯКУЄМО. ЦЕ ПОПЕРЕДНЯ ФОРМА, ВОНА ЩЕ НЕ ПІДКЛЮЧЕНА, ТОМУ ЗАПИТ НЕ НАДІСЛАНО.';
+  });
+
+  /* ---- collection cards tilt toward the pointer ---- */
+  if (!reduce && finePointer) {
+    [].slice.call(document.querySelectorAll('.card')).forEach(function (card) {
+      var img = card.querySelector('.card-media img');
+      card.addEventListener('pointermove', function (e) {
+        var r = card.getBoundingClientRect();
+        var x = (e.clientX - r.left) / r.width - 0.5, y = (e.clientY - r.top) / r.height - 0.5;
+        img.style.transform = 'rotateY(' + (x * 18).toFixed(2) + 'deg) rotateX(' + (-y * 14).toFixed(2) + 'deg) scale(1.03)';
+      });
+      card.addEventListener('pointerleave', function () { img.style.transform = ''; });
+    });
+  }
+
+  var benchEl = document.getElementById('bench');
+  function fadeHero() { if (!benchEl) return; var p = Math.min(1, Math.max(0, (window.scrollY || 0) / (window.innerHeight * 0.75))); benchEl.style.opacity = (1 - p * p * (3 - 2 * p)).toFixed(3); }
+  function tickPage() { fadeHero(); updateNav(); return updateStages(stageProgress() * 3); }
+
+  /* ---- 3D icon ---- */
+  var canvas = document.getElementById('stage');
+  var THREE = window.THREE;
+  var renderer = null;
+  if (THREE) {
+    try { renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true, alpha: true, powerPreference: 'high-performance' }); }
+    catch (err) { renderer = null; }
+  }
+  if (!renderer) {
+    canvas.style.display = 'none';
+    var pending = false;
+    var onScroll = function () { if (pending) return; pending = true; requestAnimationFrame(function () { pending = false; tickPage(); }); };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onScroll);
+    tickPage();
+    return;
+  }
+  root.classList.add('has-3d');
+
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+  renderer.outputEncoding = THREE.sRGBEncoding;
+  renderer.toneMapping = THREE.NoToneMapping;
+  renderer.setClearColor(0x000000, 0);
+
+  var scene = new THREE.Scene();
+  var camera = new THREE.PerspectiveCamera(30, 1, 0.1, 100);
+  camera.position.set(0, 0, 12);
+
+  scene.add(new THREE.AmbientLight(0xffedd7, 0.34));
+  var key = new THREE.DirectionalLight(0xffe2c0, 0.92); key.position.set(4, 5, 7); scene.add(key);
+  var rim = new THREE.DirectionalLight(0xffae62, 1.2); rim.position.set(4, 4, -5); scene.add(rim);
+  var fill = new THREE.DirectionalLight(0xbfa88f, 0.28); fill.position.set(-6, -1, 4); scene.add(fill);
+
+  var failed = false;
+  var manager = new THREE.LoadingManager();
+  manager.onError = function () { failed = true; };
+  var loader = new THREE.TextureLoader(manager);
+  var aniso = renderer.capabilities.getMaxAnisotropy();
+  function tex(url, srgb) {
+    var t = loader.load(url);
+    if (srgb) t.encoding = THREE.sRGBEncoding;
+    t.anisotropy = aniso;
+    return t;
+  }
+  var T = {
+    front: [tex('tex/front-1.webp', 1), tex('tex/front-2.webp', 1), tex('tex/front-3.webp', 1), tex('tex/front-jesus.webp', 1)],
+    n2: tex('tex/normal-2.webp'), n3: tex('tex/normal-jesus.webp'),
+    back: tex('tex/back.webp', 1), nBack: tex('tex/normal-back.webp'),
+    edgeLong: tex('tex/edge-long.webp', 1), edgeEnd: tex('tex/edge-end.webp', 1)
+  };
+  var flatN = new THREE.DataTexture(new Uint8Array([128, 128, 255, 255]), 1, 1, THREE.RGBAFormat);
+  flatN.needsUpdate = true;
+
+  var BW = 3, BH = 4, BD = 0.22;
+  function mat(o) { o.metalness = 0; o.transparent = true; return new THREE.MeshStandardMaterial(o); }
+  var mEdgeL = mat({ map: T.edgeLong, roughness: 0.72 });
+  var mEdgeE = mat({ map: T.edgeEnd, roughness: 0.75 });
+  var mFront = mat({ map: T.front[3], normalMap: T.n3, normalScale: new THREE.Vector2(1.5, 1.5), roughness: 0.55 });
+  var mBack = mat({ map: T.back, normalMap: T.nBack, roughness: 0.7 });
+  var mats = [mEdgeL, mEdgeL, mEdgeE, mEdgeE, mFront, mBack];
+  var icon = new THREE.Mesh(new THREE.BoxGeometry(BW, BH, BD), mats);
+
+  var sc = document.createElement('canvas');
+  sc.width = 256; sc.height = 320;
+  var sctx = sc.getContext('2d');
+  sctx.shadowColor = 'rgba(0,0,0,1)';
+  sctx.shadowBlur = 34;
+  sctx.shadowOffsetX = 1000;
+  sctx.fillRect(48 - 1000, 52, 160, 216);
+  var shadow = new THREE.Mesh(
+    new THREE.PlaneGeometry(BW * 1.6, BH * 1.6),
+    new THREE.MeshBasicMaterial({ map: new THREE.CanvasTexture(sc), color: 0x000000, transparent: true, depthWrite: false, opacity: 0 })
+  );
+  shadow.renderOrder = -1;
+
+  var group = new THREE.Group();
+  group.add(shadow);
+  group.add(icon);
+  group.visible = false;
+  scene.add(group);
+
+  var curStage = 3;
+  function setStage(i) {
+    if (i === curStage) return;
+    curStage = i;
+    mFront.map = T.front[i];
+    mFront.normalMap = i === 0 ? flatN : (i === 1 ? T.n2 : T.n3);
+    mFront.roughness = i === 3 ? 0.55 : 0.82;
+    var raw = i < 3;
+    if (raw) mFront.color.setRGB(0.86, 0.84, 0.8); else mFront.color.setRGB(1, 1, 1);
+    [mEdgeL, mEdgeE, mBack].forEach(function (m) { if (raw) m.color.setRGB(1.12, 1.08, 1.0); else m.color.setRGB(1, 1, 1); });
+  }
+
+  var slotEls = [].slice.call(document.querySelectorAll('[data-slot]'));
+  var ghostA = document.querySelector('.slot-ghost-a'), ghostB = document.querySelector('.slot-ghost-b');
+  function num(v, d) { return v == null || v === '' ? d : parseFloat(v); }
+  function readSlot(el) {
+    var r = el.getBoundingClientRect();
+    var cy = r.top + r.height / 2;
+    // a pinned slot counts as "reached" while its section is pinned, wherever it sits inside the pin
+    var sel = el.hasAttribute('data-pinned') ? pin.getBoundingClientRect().top + window.innerHeight / 2 : cy;
+    return {
+      cx: r.left + r.width / 2, cy: cy, sel: sel, h: r.height,
+      rx: num(el.getAttribute('data-rx'), 0), ry: num(el.getAttribute('data-ry'), 0), rz: num(el.getAttribute('data-rz'), 0),
+      op: num(el.getAttribute('data-op'), 1), sh: num(el.getAttribute('data-shadow'), 0),
+      fit: num(el.getAttribute('data-fit'), window.innerWidth <= 760 ? 0.84 : 0.92)
+    };
+  }
+
+  function resize() {
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.updateProjectionMatrix();
+  }
+  resize();
+  window.addEventListener('resize', resize);
+
+  var tmx = 0, tmy = 0, mx = 0, my = 0;
+  if (finePointer && !reduce) {
+    window.addEventListener('pointermove', function (e) {
+      tmx = e.clientX / window.innerWidth * 2 - 1;
+      tmy = e.clientY / window.innerHeight * 2 - 1;
+    }, { passive: true });
+  }
+
+  var ready = false, introStart = 0;
+  manager.onLoad = function () {
+    if (failed) { root.classList.remove('has-3d'); canvas.style.display = 'none'; return; }
+    ready = true;
+    introStart = performance.now();
+    group.visible = true;
+  };
+
+  var halfFov = THREE.MathUtils.degToRad(15);
+  function frame(now) {
+    requestAnimationFrame(frame);
+    var stage = tickPage();
+    if (!ready) return;
+
+    var vw = window.innerWidth, vh = window.innerHeight, vc = vh / 2;
+    var S = slotEls.map(readSlot);
+    var a = S[0], b = S[0], t = 0, last = S[S.length - 1];
+    if (vc >= last.sel) { a = b = last; }
+    else if (vc > S[0].sel) {
+      for (var i = 0; i < S.length - 1; i++) {
+        if (vc >= S[i].sel && vc <= S[i + 1].sel) { a = S[i]; b = S[i + 1]; t = (vc - a.sel) / Math.max(1, b.sel - a.sel); break; }
+      }
+    }
+    var e = t * t * (3 - 2 * t);
+    var L = function (p, q) { return p + (q - p) * e; };
+
+    var wpp = 2 * camera.position.z * Math.tan(halfFov) / vh;
+    var x = (L(a.cx, b.cx) - vw / 2) * wpp;
+    var y = -(L(a.cy, b.cy) - vh / 2) * wpp;
+    var s = L(a.h * a.fit, b.h * b.fit) * wpp / BH;
+    var rx = L(a.rx, b.rx), ry = L(a.ry, b.ry), rz = L(a.rz, b.rz);
+    var op = L(a.op, b.op), sh = L(a.sh, b.sh);
+
+    // carving stages while the workshop is on screen (swaps happen while the icon faces away or is invisible)
+    var gA = ghostA.getBoundingClientRect(), gB = ghostB.getBoundingClientRect();
+    var inWorkshop = (gA.top + gA.height / 2) < vc && vc < (gB.top + gB.height / 2);
+    if (inWorkshop) {
+      setStage(stage);
+      if (!reduce) {
+        var sp = stageProgress() * 3, k = Math.min(2, Math.floor(sp)), f = sp - k;
+        ry += 2 * Math.PI * (k + smooth(0.2, 0.8, f));
+      }
+    } else {
+      setStage(3);
+    }
+
+    var intro = reduce ? 1 : clamp((now - introStart) / 1300, 0, 1);
+    intro = 1 - Math.pow(1 - intro, 3);
+
+    mx += (tmx - mx) * 0.06; my += (tmy - my) * 0.06;
+    var lift = 1 - sh;
+    rx += my * 0.1 * (0.2 + 0.8 * lift);
+    ry += mx * 0.14 * (0.2 + 0.8 * lift);
+    if (!reduce) {
+      var tt = now / 1000;
+      y += Math.sin(tt * 0.9) * 0.05 * lift;
+      rz += Math.sin(tt * 0.6) * 0.012 * lift;
+    }
+
+    y += (1 - intro) * 0.25 * sh;
+    s *= 1 + (1 - intro) * 0.06;
+    op *= intro;
+
+    group.position.set(x, y, 0);
+    group.rotation.set(rx, ry, rz);
+    group.scale.setScalar(s);
+    group.visible = op > 0.003;
+    mats.forEach(function (m) { m.opacity = op; });
+
+    var lifted = (1 - sh) + (1 - intro) * sh;
+    shadow.material.opacity = 0.85 * Math.pow(sh, 1.4) * intro;
+    shadow.position.set(-0.2 - lifted * 0.5, -0.28 - lifted * 0.6, -BD / 2 - 0.02);
+    shadow.scale.setScalar(1 + lifted * 0.25);
+
+    renderer.render(scene, camera);
+  }
+  requestAnimationFrame(frame);
+})();
+</script>
