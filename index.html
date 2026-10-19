@@ -198,6 +198,8 @@ form{display:flex;flex-direction:column;gap:31px}
 .field input::placeholder{color:var(--drift)}
 .submit-row{display:flex;align-items:center;gap:24px;flex-wrap:wrap}
 .field input[aria-invalid="true"]{border-bottom-color:var(--ember)}
+.hp{position:absolute;left:-9999px;width:1px;height:1px;opacity:0}
+.pill:disabled{opacity:.6;cursor:progress}
 
 /* countdown to the next feast */
 .countdown{display:flex;flex-direction:column;gap:12px}
@@ -276,7 +278,7 @@ form{display:flex;flex-direction:column;gap:31px}
   .countdown{order:3}
   .cd-cell{min-width:0;flex:1}
   form{order:3;padding-left:0;gap:24px}
-  .submit-row .pill{width:100%}
+  .submit-row .pill,.submit-row .ghost{width:100%}
   .contacts dd{font-size:14px}
 
   .foot-row{grid-template-columns:auto minmax(0,1fr);row-gap:18px}
@@ -470,8 +472,10 @@ form{display:flex;flex-direction:column;gap:31px}
       <form id="form" novalidate data-reveal>
       <div class="field"><label for="f-name">ВАШЕ ІМ'Я</label><input id="f-name" name="name" type="text" autocomplete="name" required></div>
       <div class="field"><label for="f-contact">ТЕЛЕФОН АБО INSTAGRAM АБО EMAIL</label><input id="f-contact" name="contact" type="text" autocomplete="tel" required></div>
+      <input class="hp" name="website" type="text" tabindex="-1" autocomplete="off" aria-hidden="true">
       <div class="submit-row">
         <button class="pill" type="submit">ТАК, ХОЧУ ІКОНУ</button>
+        <a class="ghost" href="https://ig.me/m/stanwood_work" target="_blank" rel="noopener">АБО НАПИСАТИ В INSTAGRAM →</a>
         <p class="label" id="formStatus" role="status"></p>
       </div>
       </form>
@@ -487,7 +491,7 @@ form{display:flex;flex-direction:column;gap:31px}
       <dl class="contacts" data-reveal style="--rd:120ms">
         <div><dt>ТЕЛЕФОН</dt><dd>+380 68 301 05 23</dd></div>
         <div><dt>МАЙСТЕРНЯ</dt><dd>УЖГОРОД</dd></div>
-        <div><dt>INSTAGRAM</dt><dd>@STANWOOD_WORK</dd></div>
+        <div><dt>INSTAGRAM</dt><dd><a href="https://www.instagram.com/stanwood_work/" target="_blank" rel="noopener">@STANWOOD_WORK</a></dd></div>
       </dl>
     </div>
     <div class="comm-right">
@@ -608,6 +612,7 @@ form{display:flex;flex-direction:column;gap:31px}
   /* ---- form ---- */
   var form = document.getElementById('form'), statusEl = document.getElementById('formStatus');
   var nameIn = document.getElementById('f-name'), contactIn = document.getElementById('f-contact');
+  var submitBtn = form.querySelector('button[type="submit"]'), sending = false;
   [nameIn, contactIn].forEach(function (inp) {
     inp.addEventListener('input', function () { inp.removeAttribute('aria-invalid'); statusEl.textContent = ''; });
   });
@@ -625,7 +630,24 @@ form{display:flex;flex-direction:column;gap:31px}
     var name = nameIn, contact = contactIn;
     if (!name.value.trim()) { name.setAttribute('aria-invalid', 'true'); statusEl.textContent = 'БУДЬ ЛАСКА, ВКАЖІТЬ ВАШЕ ІМ\'Я.'; focusField(name); return; }
     if (!contact.value.trim()) { contact.setAttribute('aria-invalid', 'true'); statusEl.textContent = 'ВКАЖІТЬ ТЕЛЕФОН, INSTAGRAM АБО EMAIL, ЩОБ МИ МОГЛИ ВІДПОВІСТИ.'; focusField(contact); return; }
-    statusEl.textContent = 'ДЯКУЄМО. ЦЕ ПОПЕРЕДНЯ ФОРМА, ВОНА ЩЕ НЕ ПІДКЛЮЧЕНА, ТОМУ ЗАПИТ НЕ НАДІСЛАНО.';
+    if (sending) return;
+    sending = true;
+    submitBtn.disabled = true;
+    statusEl.textContent = 'НАДСИЛАЄМО…';
+    fetch('/api/order', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name: name.value, contact: contact.value, website: form.elements.website.value })
+    }).then(function (r) { return r.ok ? r.json() : { ok: false }; }).catch(function () { return { ok: false }; }).then(function (data) {
+      sending = false;
+      submitBtn.disabled = false;
+      if (data && data.ok) {
+        form.reset();
+        statusEl.textContent = 'ДЯКУЄМО! ЗАЯВКУ ОТРИМАНО — МИ СКОРО З ВАМИ ЗВ\'ЯЖЕМОСЯ.';
+      } else {
+        statusEl.textContent = 'НЕ ВДАЛОСЯ НАДІСЛАТИ. СПРОБУЙТЕ ЩЕ РАЗ АБО ПОДЗВОНІТЬ: +380 68 301 05 23.';
+      }
+    });
   });
 
   /* ---- collection cards tilt toward the pointer ---- */
