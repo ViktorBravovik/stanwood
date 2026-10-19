@@ -1,9 +1,14 @@
+<!doctype html>
+<html lang="uk">
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>STAN WOOD — Ікони ручної різьби</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&display=swap">
+<link rel="preload" as="image" href="img/hero-bg.webp" media="(min-width: 761px)" fetchpriority="high">
+<link rel="preload" as="image" href="img/hero-bg-m.webp" media="(max-width: 760px)" fetchpriority="high">
+<script>document.documentElement.classList.add('js');</script>
 <style>
 :root{
   color-scheme: dark;
@@ -26,6 +31,21 @@ h1,h2,h3{font-weight:500;text-wrap:balance}
 a{color:var(--cream)}
 :focus-visible{outline:1px dashed var(--cream);outline-offset:4px}
 img{max-width:100%}
+
+/* smooth scroll (Lenis) */
+html.lenis,html.lenis body{height:auto}
+html.lenis{scroll-behavior:auto}
+.lenis.lenis-smooth{scroll-behavior:auto !important}
+.lenis.lenis-stopped{overflow:hidden}
+
+/* reveal on scroll: rise in, or come into focus (data-reveal="focus"); --rd staggers siblings */
+@media (prefers-reduced-motion:no-preference){
+  .js [data-reveal]{opacity:0;transform:translate3d(0,28px,0);transition:opacity .9s cubic-bezier(.2,.7,.2,1),transform .9s cubic-bezier(.2,.7,.2,1),filter .9s cubic-bezier(.2,.7,.2,1);transition-delay:var(--rd,0ms)}
+  .js [data-reveal="focus"]{transform:scale(1.03);filter:blur(10px)}
+  .js [data-reveal].is-in{opacity:1;transform:none;filter:none}
+  .js .wordmark{animation:focus-in 1.6s cubic-bezier(.2,.7,.2,1) .15s both}
+}
+@keyframes focus-in{from{opacity:0;letter-spacing:.2em;filter:blur(12px)}to{opacity:1;letter-spacing:0;filter:none}}
 
 /* type roles */
 .label{font-size:var(--t-label);line-height:1.2}
@@ -51,6 +71,7 @@ img{max-width:100%}
 .nav .brand{font-size:14px}
 .nav nav{display:flex;gap:31px}
 .nav nav a.is-active{text-decoration-line:underline;text-decoration-style:dashed;text-decoration-color:var(--drift);text-underline-offset:6px}
+.menu-btn,.menu{display:none}
 
 /* shared section frame */
 .sec{position:relative;box-sizing:border-box;padding:24px var(--g)}
@@ -99,13 +120,35 @@ img{max-width:100%}
 .collection .coll-head{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));column-gap:18px;padding-block:68px}
 .slot-ghost-a{position:absolute;right:12%;top:0;width:26%;height:56vh;pointer-events:none}
 .cards{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:18px;padding-bottom:45px}
-.card{display:flex;flex-direction:column;gap:18px;padding:24px;border:1px solid var(--cork);border-radius:12px}
+.card{position:relative;overflow:hidden;display:flex;flex-direction:column;gap:18px;padding:24px;border:1px solid var(--cork);border-radius:12px;transition:translate .5s cubic-bezier(.2,.7,.2,1),border-color .5s,box-shadow .5s,background-color .5s}
+.card>*:not(.orn){position:relative}
+.orn{position:absolute;top:-40px;right:-40px;width:150px;height:150px;color:rgba(255,237,215,.07);pointer-events:none;transition:transform 1.2s cubic-bezier(.2,.7,.2,1),color .6s}
+@media (hover:hover){
+  .card:hover{translate:0 -6px;border-color:var(--drift);background-color:rgba(56,36,22,.35);box-shadow:0 30px 80px -30px rgba(220,80,0,.45)}
+  .card:hover .orn{transform:rotate(45deg);color:rgba(220,80,0,.3)}
+}
+@media (prefers-reduced-motion:reduce){ .card,.orn{transition:none} .card:hover{translate:none} .card:hover .orn{transform:none} }
 .card-media{aspect-ratio:3/4;display:flex;align-items:center;justify-content:center;perspective:800px}
 .card-media img{width:100%;height:100%;object-fit:contain;display:block;transition:transform .5s cubic-bezier(.2,.7,.2,1);transform-style:preserve-3d}
 .card-meta{display:flex;flex-direction:column;gap:8px}
 .card-meta h3{font-size:var(--t-sub);line-height:1}
 .card-foot{display:flex;justify-content:space-between;align-items:center;gap:12px}
 .num{font-size:10px;line-height:1.2}
+
+/* collection rail: pinned, cards slide sideways while the page scrolls (enabled by JS) */
+.slot-ghost-a2{position:absolute;right:12%;bottom:0;width:26%;height:56vh;pointer-events:none}
+.coll-progress{display:none}
+.collection.is-rail{height:300vh;height:300svh;padding:0}
+.is-rail .coll-pin{position:sticky;top:0;height:100vh;height:100svh;box-sizing:border-box;padding:calc(env(safe-area-inset-top,0px) + 56px) var(--g) 24px;display:flex;flex-direction:column;overflow:hidden}
+.is-rail .coll-body{flex:1;min-height:0;display:flex;align-items:center;gap:clamp(24px,3vw,48px)}
+.collection.is-rail .coll-head{width:28vw;flex-shrink:0;display:flex;flex-direction:column;gap:24px;padding:0}
+.is-rail .coll-progress{display:flex;align-items:center;gap:14px}
+.coll-count{font-variant-numeric:tabular-nums}
+.coll-bar{position:relative;width:128px;height:1px;background:var(--cork)}
+.coll-bar i{position:absolute;inset:0;background:var(--ember);transform-origin:left;transform:scaleX(0)}
+.is-rail .rail-view{flex:1;min-width:0;overflow:hidden;padding:40px 0 40px 40px;margin:-40px 0 -40px -40px;-webkit-mask-image:linear-gradient(90deg,transparent,#000 40px);mask-image:linear-gradient(90deg,transparent,#000 40px)}
+.collection.is-rail .cards{display:flex;gap:18px;padding:0;will-change:transform}
+.is-rail .card{flex-shrink:0;width:clamp(17rem,23vw,22rem);width:min(clamp(17rem,23vw,22rem),calc((100svh - 360px) * .75 + 48px));transform-origin:50% 100%}
 
 /* workshop: pinned while the icon is carved stage by stage */
 .process{height:420vh;padding:0}
@@ -124,6 +167,15 @@ img{max-width:100%}
 .stage.is-active .stage-body{grid-template-rows:1fr}
 .slot-process{height:70vh;min-height:380px}
 .stage-count{font-variant-numeric:tabular-nums}
+
+/* workshop drawing: a carpenter's sketch around the icon, drawn leg by leg with the stages */
+.draft{position:absolute;inset:0;width:100%;height:100%;overflow:visible;pointer-events:none}
+.draft .guide{fill:none;stroke:var(--cork);stroke-width:1;stroke-dasharray:3 6}
+.draft .live{fill:none;stroke:var(--ember);stroke-width:1.5;stroke-linecap:round}
+.draft .tip-halo{fill:var(--ember);opacity:.25}
+.draft .tip-core{fill:var(--cream)}
+.draft text{fill:var(--drift);font:500 10px/1 var(--font);letter-spacing:.08em}
+.draft text.read{fill:var(--cream)}
 
 /* commission */
 .commission{min-height:100vh;display:flex;flex-direction:column}
@@ -144,12 +196,15 @@ form{display:flex;flex-direction:column;gap:31px}
 .field label,.field legend{font-size:12px;line-height:1.2;padding:0}
 .field input{width:100%;box-sizing:border-box;min-height:44px;padding:10px 36px 10px 2px;background:transparent;border:0;border-bottom:1px solid var(--cream);border-radius:0;color:var(--cream);font:400 18px/1.2 var(--font)}
 .field input::placeholder{color:var(--drift)}
-fieldset.field{border:0;margin:0;padding:0}
-.choices{display:flex;gap:12px;margin-top:4px}
-.ghost[aria-pressed="false"]{border-color:var(--cork)}
-.ghost .dot{width:6px;height:6px;border-radius:9999px;background:transparent}
-.ghost[aria-pressed="true"] .dot{background:var(--cream)}
 .submit-row{display:flex;align-items:center;gap:24px;flex-wrap:wrap}
+.field input[aria-invalid="true"]{border-bottom-color:var(--ember)}
+
+/* countdown to the next feast */
+.countdown{display:flex;flex-direction:column;gap:12px}
+.cd-row{display:flex;gap:10px}
+.cd-cell{min-width:64px;padding:12px 10px;text-align:center;border:1px dashed var(--cork);border-radius:6px}
+.cd-n{display:block;font-size:28px;line-height:1;font-variant-numeric:tabular-nums}
+.cd-u{display:block;margin-top:6px;font-size:10px;line-height:1;color:var(--drift)}
 
 /* footer */
 .foot{position:relative;padding:0 var(--g) 24px;display:flex;flex-direction:column;gap:24px}
@@ -157,14 +212,18 @@ fieldset.field{border:0;margin:0;padding:0}
 .foot-mark{font-size:var(--t-display);line-height:.9}
 .foot nav{display:flex;gap:31px;flex-wrap:wrap}
 .foot nav a{display:inline-flex;align-items:center;min-height:44px;font-size:12px;line-height:1;text-decoration:none}
-.foot-meta{display:flex;flex-direction:column;align-items:flex-end;gap:8px;font-size:12px}
-.legal{font:500 10px/1.2 Arial,system-ui,sans-serif}
+.foot-meta{display:flex;flex-direction:column;align-items:flex-end;gap:8px;font-size:12px;text-align:right}
 
 /* phone */
 @media (max-width:760px){
-  .nav nav{gap:18px}
-  .nav .hide-sm{display:none}
+  .nav nav{display:none}
   .nav a{font-size:11px}
+  .menu-btn{display:inline-flex;align-items:center;min-height:44px;padding:0;background:none;border:0;color:var(--cream);font:500 11px/1 var(--font);letter-spacing:.06em;cursor:pointer}
+  .menu{display:flex;position:fixed;inset:0;z-index:-1;flex-direction:column;justify-content:center;gap:22px;padding:0 var(--g);background:rgba(16,9,4,.94);-webkit-backdrop-filter:blur(18px);backdrop-filter:blur(18px);opacity:0;pointer-events:none;transition:opacity .35s}
+  .menu.is-open{opacity:1;pointer-events:auto}
+  .nav .menu a{display:flex;align-items:baseline;gap:16px;font-size:34px;line-height:1}
+  .nav .menu a .num{font-size:11px;color:var(--ember)}
+  .nav .menu a.is-active{color:var(--cream);text-decoration:underline dashed var(--drift);text-underline-offset:8px}
   .hero{height:100svh;min-height:600px}
   .bench{background:linear-gradient(180deg,rgba(16,9,4,.35) 0%,rgba(16,9,4,0) 35%),url('img/hero-bg-m.webp') 50% 100%/cover no-repeat}
   .hero-copy{position:absolute;left:var(--g);top:calc(env(safe-area-inset-top,0px) + 17.5svh);gap:10px}
@@ -186,13 +245,20 @@ fieldset.field{border:0;margin:0;padding:0}
   .specs,.aud{order:5}
 
   .collection .coll-head{grid-template-columns:1fr;row-gap:24px;padding-block:24px}
-  .slot-ghost-a{right:0;width:60%;height:40vh}
+  .slot-ghost-a,.slot-ghost-a2{right:0;width:60%;height:40vh}
   .cards{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
   .card{padding:12px;gap:12px}
   .card-meta h3{font-size:14px}
+  .orn{width:110px;height:110px;top:-30px;right:-30px}
+  .is-rail .coll-body{flex-direction:column;align-items:stretch;justify-content:center;gap:24px}
+  .collection.is-rail .coll-head{width:auto;gap:14px}
+  .collection.is-rail .coll-head .body{display:none}
+  .collection.is-rail .cards{gap:12px}
+  .is-rail .rail-view{flex:none;padding-left:0;margin-left:0;-webkit-mask-image:none;mask-image:none}
+  .is-rail .card{width:62vw;width:min(62vw,calc((100svh - 420px) * .75 + 24px))}
 
   .process-grid{display:flex;flex-direction:column;justify-content:flex-start;gap:14px;padding-top:14px}
-  .slot-process{order:-1;height:32vh;height:32svh;min-height:0;width:100%}
+  .slot-process{order:-1;height:30vh;height:30svh;min-height:0;width:100%;margin:22px 0 40px}
   .process-copy{gap:14px}
   .process-copy .h-display{font-size:32px}
   .stage{grid-template-columns:40px minmax(0,1fr);padding:12px 0}
@@ -207,16 +273,23 @@ fieldset.field{border:0;margin:0;padding:0}
   .comm-right{display:contents}
   .slot-commission{order:1;height:38svh;min-height:260px}
   .promo{order:2}
+  .countdown{order:3}
+  .cd-cell{min-width:0;flex:1}
   form{order:3;padding-left:0;gap:24px}
   .submit-row .pill{width:100%}
   .contacts dd{font-size:14px}
 
-  .foot-row{grid-template-columns:1fr;row-gap:18px}
-  .foot-meta{align-items:flex-start}
+  .foot-row{grid-template-columns:auto minmax(0,1fr);row-gap:18px}
+  .foot-mark{font-size:28px}
+  .foot-meta{grid-column:2;grid-row:1;font-size:11px;white-space:nowrap}
+  .foot nav{grid-column:1 / -1;grid-row:2}
 }
 @media (min-width:761px) and (max-width:1100px){
   .cards{grid-template-columns:repeat(2,minmax(0,1fr))}
   .comm-left{padding-right:24px} .comm-right{padding-left:24px}
+  .foot-row{grid-template-columns:auto minmax(0,1fr);row-gap:18px}
+  .foot-meta{grid-column:2;grid-row:1}
+  .foot nav{grid-column:1 / -1;grid-row:2}
 }
 </style>
 
@@ -230,7 +303,29 @@ fieldset.field{border:0;margin:0;padding:0}
     <a href="#workshop" data-target="workshop">МАЙСТЕРНЯ</a>
     <a href="#commission" data-target="commission">КОНТАКТИ</a>
   </nav>
+  <button class="menu-btn" id="menuBtn" type="button" aria-expanded="false" aria-controls="menu">МЕНЮ</button>
+  <div class="menu" id="menu" inert>
+    <a href="#intro" data-target="intro"><span class="num">01</span>ГОЛОВНА</a>
+    <a href="#icons" data-target="icons"><span class="num">02</span>ІКОНИ</a>
+    <a href="#workshop" data-target="workshop"><span class="num">03</span>МАЙСТЕРНЯ</a>
+    <a href="#commission" data-target="commission"><span class="num">04</span>КОНТАКТИ</a>
+  </div>
 </header>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="orn" viewBox="0 0 200 200">
+    <g fill="none" stroke="currentColor" stroke-width="1.2">
+      <circle cx="100" cy="100" r="88" stroke-dasharray="3 6"/>
+      <circle cx="100" cy="100" r="74"/>
+      <ellipse cx="100" cy="100" rx="66" ry="17"/>
+      <ellipse cx="100" cy="100" rx="66" ry="17" transform="rotate(45 100 100)"/>
+      <ellipse cx="100" cy="100" rx="66" ry="17" transform="rotate(90 100 100)"/>
+      <ellipse cx="100" cy="100" rx="66" ry="17" transform="rotate(135 100 100)"/>
+      <circle cx="100" cy="100" r="22"/>
+    </g>
+    <circle cx="100" cy="100" r="8" fill="currentColor"/>
+  </symbol>
+</svg>
 
 <main>
 
@@ -243,108 +338,121 @@ fieldset.field{border:0;margin:0;padding:0}
     </div>
   </div>
   <div class="hero-copy layer">
-    <p class="label">ІКОНИ РУЧНОЇ РІЗЬБИ ДЛЯ РОДИНИ ТА ХРАМУ</p>
+    <p class="label">У КОЖНОМУ ДОМІ — СВОЯ БЛАГОДАТЬ</p>
     <h1 class="wordmark"><span>STAN</span><span>WOOD</span></h1>
     <p class="hero-sub">МАЙСТЕРНЯ РІЗЬБИ ПО ДЕРЕВУ</p>
-    <a class="cta" href="#icons">ПЕРЕГЛЯНУТИ ІКОНИ →</a>
+    <a class="cta" href="#icons">ОБРАТИ ІКОНУ ДЛЯ ДОМУ →</a>
   </div>
-  <p class="vlabel layer" aria-hidden="true">STAN WOOD · УЖГОРОД · ІС ХС · РІЗЬБЛЕНИЙ РЕЛЬЄФ</p>
+  <p class="vlabel layer" aria-hidden="true">STAN WOOD · ІКОНИ РУЧНОЇ РІЗЬБИ · 5 ЗА ЦІНОЮ 4</p>
   <div class="scroll-cue layer" aria-hidden="true"><span>ГОРТАЙТЕ</span><i></i></div>
 </section>
 
 <section class="sec reveal" id="object" data-nav="intro">
-  <div class="sec-head layer"><div class="rule"></div><div class="row label"><span>01 — СУТЬ РЕЧІ</span><span>МАЛ. 01</span></div></div>
+  <div class="sec-head layer" data-reveal><div class="rule"></div><div class="row label"><span>01 — СУТЬ РЕЧІ</span><span>МАЛ. 01</span></div></div>
   <div class="reveal-grid">
     <div class="col-left">
-      <h2 class="h-heading layer"><span>НЕ ДРУК.</span><span>НЕ ШТАМП.</span><span>РУЧНА РІЗЬБА.</span></h2>
-      <dl class="specs layer">
-        <div><dt>ДЕРЕВО</dt><dd>[ПОРОДА ДЕРЕВА]</dd></div>
+      <h2 class="h-heading layer" data-reveal="focus"><span>А ЧИМ ВОНА ІНША,</span><span>НІЖ ДРУКОВАНА?</span></h2>
+      <dl class="specs layer" data-reveal style="--rd:160ms">
+        <div><dt>МАТЕРІАЛ</dt><dd>НАТУРАЛЬНЕ ДЕРЕВО</dd></div>
         <div><dt>СПОСІБ</dt><dd>РУЧНЕ РІЗЬБЛЕННЯ</dd></div>
-        <div><dt>РОЗМІРИ</dt><dd>ВІД [MIN] ДО [MAX] СМ</dd></div>
-        <div><dt>ПОКРИТТЯ</dt><dd>[ОЛІЯ / ВІСК / ЛАК]</dd></div>
+        <div><dt>ЦІНА</dt><dd>1997 ₴</dd></div>
+        <div><dt>АКЦІЯ</dt><dd>5 ІКОН ЗА ЦІНОЮ 4</dd></div>
       </dl>
     </div>
     <div class="slot slot-center" data-slot data-rx="0.05" data-ry="-0.26" role="img" aria-label="Ікона Христа, трохи повернута: піднятий німб із хрестом, літери ІС ХС і промені, вирізьблені в дошці">
-      <img class="fallback" src="img/panel-christ.webp" alt="">
+      <img class="fallback" src="img/panel-christ.webp" alt="" loading="lazy" decoding="async">
       <p class="figcap layer">МАЛ. 01 — ІКОНА ХРИСТА · РІЗЬБЛЕНИЙ РЕЛЬЄФ</p>
     </div>
     <div class="col-right">
-      <p class="body layer">Кожна ікона починається з цільної дошки. Зображення вирізається вручну — німб, літери, кожна лінія — тому двох однакових не буває.</p>
+      <p class="body layer" data-reveal style="--rd:240ms">Тим, що її вирізьбили руки, а не верстат. Німб, літери, кожна складка одягу — все вручну. Тому такої ікони більше ні в кого немає.</p>
     </div>
   </div>
 </section>
 
 <section class="sec reveal" id="families" data-nav="intro">
-  <div class="sec-head layer"><div class="rule"></div><div class="row label"><span>02 — ДЛЯ КОГО</span><span>МАЛ. 02</span></div></div>
+  <div class="sec-head layer" data-reveal><div class="rule"></div><div class="row label"><span>02 — ДЛЯ КОГО</span><span>МАЛ. 02</span></div></div>
   <div class="reveal-grid">
     <div class="col-left">
-      <h2 class="h-heading layer"><span>ДЛЯ РОДИНИ.</span><span>ДЛЯ ХРАМУ.</span></h2>
-      <div class="aud layer">
-        <div><span class="label">РОДИНАМ</span><strong>ХРЕЩЕННЯ · ВІНЧАННЯ · ІМЕНИНИ · ІКОНА В ДІМ</strong></div>
-        <div><span class="label">ХРАМАМ</span><strong>ІКОНИ ПІД ПОСВЯТУ, СТІНУ ТА РОЗМІР ВАШОЇ ПАРАФІЇ</strong></div>
+      <h2 class="h-heading layer" data-reveal="focus"><span>ДЛЯ КОГО ВОНА?</span></h2>
+      <div class="aud layer" data-reveal style="--rd:160ms">
+        <div><span class="label">ДИТИНІ</span><strong>НА ХРЕЩЕННЯ — ЩОБ ОБРАЗ БЕРІГ ЗМАЛКУ</strong></div>
+        <div><span class="label">МОЛОДЯТАМ</span><strong>НА ВІНЧАННЯ — БЛАГОСЛОВЕННЯ НА СПІЛЬНЕ ЖИТТЯ</strong></div>
       </div>
     </div>
     <div class="slot slot-center" data-slot data-rx="-0.08" data-ry="0.74" data-rz="0.02" role="img" aria-label="Та сама ікона, повернута на три чверті — видно товщину дошки">
-      <img class="fallback" src="img/panel-mother-34c.webp" alt="">
+      <img class="fallback" src="img/panel-mother-34c.webp" alt="" loading="lazy" decoding="async">
       <p class="figcap layer">МАЛ. 02 — РАКУРС ТРИ ЧВЕРТІ · ТОВЩИНА ДОШКИ</p>
     </div>
     <div class="col-right">
-      <p class="body layer">Невелика ікона — у подарунок на хрестини. Великий образ — для храму. Та сама ретельність і увага до деталей — незалежно від розміру.</p>
-      <a class="ghost layer" href="#commission">ДІЗНАТИСЯ ПРО ЗАМОВЛЕННЯ ДЛЯ ХРАМУ</a>
+      <p class="body layer" data-reveal style="--rd:240ms">А може, й собі. Ікона, перед якою молилися батьки, потім переходить до дітей — і так поколіннями.</p>
+      <a class="ghost layer" href="#commission" data-reveal style="--rd:340ms">А ЯКЩО ВЗЯТИ ДЛЯ ВСІЄЇ РОДИНИ? →</a>
     </div>
   </div>
 </section>
 
 <section class="sec collection" id="icons" data-nav="icons">
   <div class="slot slot-ghost-a" data-slot data-op="0" data-rx="-0.5" data-ry="1.5" data-rz="0.25" aria-hidden="true"></div>
-  <div class="sec-head layer"><div class="rule"></div><div class="row label"><span>03 — КОЛЕКЦІЯ</span><span>ПІД ЗАМОВЛЕННЯ</span></div></div>
+  <div class="coll-pin" id="collPin">
+  <div class="sec-head layer" data-reveal><div class="rule"></div><div class="row label"><span>03 — КОЛЕКЦІЯ</span><span>1997 ₴ · 5 ЗА ЦІНОЮ 4</span></div></div>
+  <div class="coll-body">
   <div class="coll-head">
-    <h2 class="h-display layer">КОЛЕКЦІЯ.</h2>
-    <p class="body layer">Кожна ікона виготовляється під замовлення. Оберіть сюжет нижче — або принесіть власний: іменну ікону родини чи храмове свято.</p>
+    <h2 class="h-display layer" data-reveal="focus">ЯКУ Ж ОБРАТИ?</h2>
+    <p class="body layer" data-reveal style="--rd:160ms">Подивіться на кожну — серце підкаже. Ціна однакова: 1997 ₴. А візьмете п'ять — заплатите за чотири.</p>
+    <div class="coll-progress label layer" aria-hidden="true"><span class="coll-count"><span id="collNum">01</span> / 04</span><span class="coll-bar"><i id="collBar"></i></span></div>
   </div>
-  <div class="cards layer">
+  <div class="rail-view">
+  <div class="cards layer" id="rail">
     <article class="card">
-      <div class="card-media"><img src="img/panel-christ-sm.webp" alt="Різьблена ікона Христа з німбом, хрестом і літерами ІС ХС" loading="lazy"></div>
+      <svg class="orn" aria-hidden="true"><use href="#orn"/></svg>
+      <div class="card-media"><img src="img/panel-christ-sm.webp" alt="Різьблена ікона Христа з німбом, хрестом і літерами ІС ХС" width="720" height="960" loading="lazy" decoding="async"></div>
       <div class="rule"></div>
-      <div class="card-meta"><span class="num">№ 01</span><h3>ХРИСТОС ВСЕДЕРЖИТЕЛЬ</h3><span class="label">ІС ХС · ДЛЯ ДОМУ ЧИ ХРАМУ</span></div>
-      <div class="card-foot"><span class="label">ВІД [ЦІНА]</span><a class="ulink" href="#commission" data-subject="Христос Вседержитель">ДІЗНАТИСЯ ЦІНУ</a></div>
+      <div class="card-meta"><span class="num">№ 01</span><h3>ХРИСТОС ВСЕДЕРЖИТЕЛЬ</h3><span class="label">ДЛЯ ДОМУ</span></div>
+      <div class="card-foot"><span class="label">1997 ₴</span><a class="ulink" href="#commission">ЗАМОВИТИ</a></div>
     </article>
     <article class="card">
-      <div class="card-media"><img src="img/panel-mother.webp" alt="Різьблена ікона Богородиці з Дитям, ніжність щока до щоки" loading="lazy"></div>
+      <svg class="orn" aria-hidden="true"><use href="#orn"/></svg>
+      <div class="card-media"><img src="img/panel-mother.webp" alt="Різьблена ікона Богородиці з Дитям, ніжність щока до щоки" width="720" height="960" loading="lazy" decoding="async"></div>
       <div class="rule"></div>
-      <div class="card-meta"><span class="num">№ 02</span><h3>БОГОРОДИЦЯ</h3><span class="label">МР ΘΥ · З ДИТЯМ</span></div>
-      <div class="card-foot"><span class="label">ВІД [ЦІНА]</span><a class="ulink" href="#commission" data-subject="Богородиця">ДІЗНАТИСЯ ЦІНУ</a></div>
+      <div class="card-meta"><span class="num">№ 02</span><h3>БОГОРОДИЦЯ</h3><span class="label">З ДИТЯМ</span></div>
+      <div class="card-foot"><span class="label">1997 ₴</span><a class="ulink" href="#commission">ЗАМОВИТИ</a></div>
     </article>
     <article class="card">
-      <div class="card-media"><img src="img/panel-saint.webp" alt="Різьблена іменна ікона священномученика Петра Ороса" loading="lazy"></div>
+      <svg class="orn" aria-hidden="true"><use href="#orn"/></svg>
+      <div class="card-media"><img src="img/panel-saint.webp" alt="Різьблена ікона святого в орнаментальній рамі" width="720" height="960" loading="lazy" decoding="async"></div>
       <div class="rule"></div>
-      <div class="card-meta"><span class="num">№ 03</span><h3>ІМЕННІ ІКОНИ СВЯТИХ</h3><span class="label">НЕБЕСНИЙ ПОКРОВИТЕЛЬ РОДИНИ ЧИ ПАРАФІЇ</span></div>
-      <div class="card-foot"><span class="label">ВІД [ЦІНА]</span><a class="ulink" href="#commission" data-subject="Іменна ікона святого">ДІЗНАТИСЯ ЦІНУ</a></div>
+      <div class="card-meta"><span class="num">№ 03</span><h3>ІКОНА СВЯТОГО</h3><span class="label">ДЛЯ ДОМУ</span></div>
+      <div class="card-foot"><span class="label">1997 ₴</span><a class="ulink" href="#commission">ЗАМОВИТИ</a></div>
     </article>
     <article class="card">
-      <div class="card-media"><img src="img/panel-theotokos-gilded.webp" alt="Різьблена ікона Богородиці з Дитям на темному горісі із золоченням" loading="lazy"></div>
+      <svg class="orn" aria-hidden="true"><use href="#orn"/></svg>
+      <div class="card-media"><img src="img/panel-theotokos-gilded.webp" alt="Різьблена ікона Богородиці з Дитям на темному дереві із золоченням" width="720" height="960" loading="lazy" decoding="async"></div>
       <div class="rule"></div>
-      <div class="card-meta"><span class="num">№ 04</span><h3>БОГОРОДИЦЯ, ТЕМНИЙ ГОРІХ</h3><span class="label">РІЗЬБЛЕННЯ ІЗ ЗОЛОЧЕННЯМ</span></div>
-      <div class="card-foot"><span class="label">ВІД [ЦІНА]</span><a class="ulink" href="#commission" data-subject="Богородиця, темний горіх із золоченням">ДІЗНАТИСЯ ЦІНУ</a></div>
+      <div class="card-meta"><span class="num">№ 04</span><h3>БОГОРОДИЦЯ ІЗ ЗОЛОЧЕННЯМ</h3><span class="label">ТЕМНЕ ДЕРЕВО</span></div>
+      <div class="card-foot"><span class="label">1997 ₴</span><a class="ulink" href="#commission">ЗАМОВИТИ</a></div>
     </article>
   </div>
+  </div>
+  </div>
+  </div>
+  <div class="slot slot-ghost-a2" data-slot data-op="0" data-rx="-0.5" data-ry="1.5" data-rz="0.25" aria-hidden="true"></div>
 </section>
 
 <section class="sec process" id="workshop" data-nav="workshop">
   <div class="process-pin" id="pin">
-    <div class="sec-head layer"><div class="rule"></div><div class="row label"><span>04 — МАЙСТЕРНЯ</span><span class="stage-count" aria-live="polite">ЕТАП <span id="stageNum">01</span> / 04</span></div></div>
+    <div class="sec-head layer" data-reveal><div class="rule"></div><div class="row label"><span>04 — МАЙСТЕРНЯ</span><span class="stage-count"><span aria-live="polite">ЕТАП <span id="stageNum">01</span> / 04</span><span aria-hidden="true"> · ГОТОВНІСТЬ <span id="draftPct">0</span>%</span></span></div></div>
     <div class="process-grid">
       <div class="process-copy layer">
-        <h2 class="h-display">ВІД ДОШКИ ДО ІКОНИ.</h2>
+        <h2 class="h-display" data-reveal="focus">А ЯК ЇЇ РОБЛЯТЬ?</h2>
         <ol class="stages">
-          <li class="stage is-active"><span class="num">01</span><div><h3>ДОШКА</h3><div class="stage-body"><div><p class="body">Дошку з цільного масиву обирають за текстурою й залишають вистоятись, щоб готова ікона служила поколінням.</p></div></div></div></li>
-          <li class="stage"><span class="num">02</span><div><h3>КІВОТ</h3><div class="stage-body"><div><p class="body">У дошці вирізається поле, залишаючи піднятий край — ківот, що обрамляє святий образ.</p></div></div></div></li>
-          <li class="stage"><span class="num">03</span><div><h3>ОБРАЗ</h3><div class="stage-body"><div><p class="body">Німб, хрест і літери вирізьблюються вручну, за канонами іконописної традиції.</p></div></div></div></li>
-          <li class="stage"><span class="num">04</span><div><h3>ОЗДОБЛЕННЯ</h3><div class="stage-body"><div><p class="body">Дерево покривають, щоб підкреслити текстуру. Ікона готова до освячення та дому.</p></div></div></div></li>
+          <li class="stage is-active"><span class="num">01</span><div><h3>ДОШКА</h3><div class="stage-body"><div><p class="body">Спершу — цільне дерево. Його обирають за текстурою й дають вистоятись, щоб ікона служила поколінням.</p></div></div></div></li>
+          <li class="stage"><span class="num">02</span><div><h3>КІВОТ</h3><div class="stage-body"><div><p class="body">Потім у дошці вирізають поле, залишаючи піднятий край, що обрамляє святий образ.</p></div></div></div></li>
+          <li class="stage"><span class="num">03</span><div><h3>ОБРАЗ</h3><div class="stage-body"><div><p class="body">Далі — найважливіше: німб, хрест і лик вирізьблюють вручну, за канонами.</p></div></div></div></li>
+          <li class="stage"><span class="num">04</span><div><h3>ОЗДОБЛЕННЯ</h3><div class="stage-body"><div><p class="body">І наостанок дерево покривають, щоб проявилась текстура. Ікона готова до освячення — і до вашого дому.</p></div></div></div></li>
         </ol>
       </div>
       <div class="slot slot-process" data-slot data-pinned data-rx="0.04" data-ry="-0.32" role="img" aria-label="Ікона на кожному етапі різьблення — від простої дошки до готового образу">
-        <img class="fallback" src="img/panel-christ.webp" alt="">
+        <svg class="draft" id="draft" aria-hidden="true"></svg>
+        <img class="fallback" src="img/panel-christ.webp" alt="" loading="lazy" decoding="async">
       </div>
     </div>
   </div>
@@ -352,59 +460,60 @@ fieldset.field{border:0;margin:0;padding:0}
 
 <section class="sec commission" id="commission" data-nav="commission">
   <div class="slot slot-ghost-b" data-slot data-op="0" data-rx="0.3" data-ry="-1.4" data-rz="-0.2" aria-hidden="true"></div>
-  <div class="sec-head layer"><div class="rule"></div><div class="row label"><span>05 — ЗАМОВЛЕННЯ</span><span>ВІДПОВІДАЄМО НА КОЖЕН ЗАПИТ</span></div></div>
+  <div class="sec-head layer" data-reveal><div class="rule"></div><div class="row label"><span>05 — ЗАМОВЛЕННЯ</span><span>ВІДПОВІДАЄМО НА КОЖЕН ЗАПИТ</span></div></div>
   <div class="comm-intro layer">
-    <h2 class="h-display">ЗАМОВИТИ ІКОНУ.</h2>
-    <p class="body">Напишіть, для кого ікона, який святий чи свято, де вона висітиме. Ми відповімо з розмірами, термінами та ціною.</p>
+    <h2 class="h-display" data-reveal="focus">ТО ЩО, ЗАМОВЛЯЄМО?</h2>
+    <p class="body" data-reveal style="--rd:160ms">Залиште ім'я та телефон або email — і напишіть, що хотіли б отримати. Ціна здається трохи високою? Ми готові домовитись.</p>
   </div>
   <div class="comm-grid layer">
     <div class="comm-left">
-      <form id="form" novalidate>
-      <fieldset class="field">
-        <legend>ІКОНА ДЛЯ</legend>
-        <div class="choices" id="choices">
-          <button type="button" class="ghost" aria-pressed="true" data-for="family"><span class="dot"></span>РОДИНИ</button>
-          <button type="button" class="ghost" aria-pressed="false" data-for="church"><span class="dot"></span>ХРАМУ</button>
-        </div>
-      </fieldset>
-      <div class="field"><label for="f-subject">ЯКУ ІКОНУ ВИ УЯВЛЯЄТЕ</label><input id="f-subject" name="subject" type="text" placeholder="Святий, свято, розмір, де вона висітиме"></div>
+      <form id="form" novalidate data-reveal>
       <div class="field"><label for="f-name">ВАШЕ ІМ'Я</label><input id="f-name" name="name" type="text" autocomplete="name" required></div>
       <div class="field"><label for="f-contact">ТЕЛЕФОН АБО INSTAGRAM АБО EMAIL</label><input id="f-contact" name="contact" type="text" autocomplete="tel" required></div>
       <div class="submit-row">
-        <button class="pill" type="submit">НАДІСЛАТИ ЗАПИТ</button>
+        <button class="pill" type="submit">ТАК, ХОЧУ ІКОНУ</button>
         <p class="label" id="formStatus" role="status"></p>
       </div>
       </form>
-      <dl class="contacts">
+      <div class="countdown" id="countdown" data-month="12" data-day="25" data-reveal style="--rd:120ms">
+        <p class="label">ДО РІЗДВА ХРИСТОВОГО — ЧИ Є КРАЩИЙ ПОДАРУНОК?</p>
+        <div class="cd-row" role="timer" id="cdRow">
+          <div class="cd-cell"><span class="cd-n" data-cd="d">00</span><span class="cd-u">ДНІВ</span></div>
+          <div class="cd-cell"><span class="cd-n" data-cd="h">00</span><span class="cd-u">ГОД</span></div>
+          <div class="cd-cell"><span class="cd-n" data-cd="m">00</span><span class="cd-u">ХВ</span></div>
+          <div class="cd-cell"><span class="cd-n" data-cd="s">00</span><span class="cd-u">СЕК</span></div>
+        </div>
+      </div>
+      <dl class="contacts" data-reveal style="--rd:120ms">
         <div><dt>ТЕЛЕФОН</dt><dd>+380 68 301 05 23</dd></div>
         <div><dt>МАЙСТЕРНЯ</dt><dd>УЖГОРОД</dd></div>
         <div><dt>INSTAGRAM</dt><dd>@STANWOOD_WORK</dd></div>
       </dl>
     </div>
     <div class="comm-right">
-      <div class="slot slot-commission" data-slot data-rx="0.04" data-ry="-0.18" data-rz="0.01" data-fit="0.88" role="img" aria-label="Готова ікона Христа, що залишається на екрані біля форми замовлення">
-        <img class="fallback" src="img/panel-christ.webp" alt="">
+      <div class="slot slot-commission" data-slot data-rx="0.04" data-ry="-0.18" data-rz="0.01" data-fit="0.88" role="img" aria-label="Різьблена ікона Христа">
+        <img class="fallback" src="img/panel-christ.webp" alt="" loading="lazy" decoding="async">
       </div>
-      <p class="promo">★ ЗНИЖКА 10% — напишіть, що ви з веб-сайту, і отримаєте знижку 10% на перше замовлення.</p>
+      <p class="promo" data-reveal>★ А П'ЯТА — У ПОДАРУНОК: 5 ікон за ціною 4 — 7988 ₴ замість 9985 ₴.</p>
     </div>
   </div>
 </section>
 
 <footer class="foot layer" data-nav="commission">
   <div class="rule"></div>
-  <div class="foot-row">
+  <div class="foot-row" data-reveal>
     <span class="foot-mark">STAN WOOD</span>
     <nav aria-label="Футер">
       <a href="#intro">ГОЛОВНА</a><a href="#icons">ІКОНИ</a><a href="#workshop">МАЙСТЕРНЯ</a><a href="#commission">КОНТАКТИ</a>
     </nav>
     <div class="foot-meta"><span class="credit">РУЧНА РОБОТА · УЖГОРОД</span><span>© 2026 STAN WOOD</span></div>
   </div>
-  <p class="legal">* ІКОНИ НА ЦІЙ СТОРІНЦІ — ВІЗУАЛІЗАЦІЇ. КОЖНА ІКОНА ВИГОТОВЛЯЄТЬСЯ ПІД ЗАМОВЛЕННЯ, ТОМУ КОЖНА — УНІКАЛЬНА.</p>
 </footer>
 
 </main>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js"></script>
 <script>
 (function () {
   var root = document.documentElement;
@@ -412,6 +521,50 @@ fieldset.field{border:0;margin:0;padding:0}
   var finePointer = window.matchMedia('(pointer: fine)').matches;
   var clamp = function (v, a, b) { return Math.max(a, Math.min(b, v)); };
   var smooth = function (e0, e1, x) { var t = clamp((x - e0) / (e1 - e0), 0, 1); return t * t * (3 - 2 * t); };
+  var ease = function (t) { return 1 - Math.pow(1 - t, 3); };
+
+  /* ---- smooth scroll: Lenis eases the wheel; the single rAF loop at the bottom drives it ---- */
+  var lenis = !reduce && window.Lenis ? new window.Lenis({ lerp: 0.09, smoothWheel: true, wheelMultiplier: 0.9 }) : null;
+  function scrollToY(y) { if (lenis) lenis.scrollTo(y, { immediate: true, force: true }); else window.scrollTo(0, y); }
+
+  /* ---- phone menu ---- */
+  var menuBtn = document.getElementById('menuBtn'), menu = document.getElementById('menu'), menuOpen = false;
+  function setMenu(open) {
+    menuOpen = open;
+    menu.classList.toggle('is-open', open);
+    menu.inert = !open;
+    menuBtn.setAttribute('aria-expanded', String(open));
+    menuBtn.textContent = open ? 'ЗАКРИТИ' : 'МЕНЮ';
+    if (lenis) { if (open) lenis.stop(); else lenis.start(); }
+    else root.style.overflow = open ? 'hidden' : '';
+  }
+  menuBtn.addEventListener('click', function () { setMenu(!menuOpen); });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && menuOpen) { setMenu(false); menuBtn.focus(); } });
+  window.matchMedia('(max-width: 760px)').addEventListener('change', function (m) { if (!m.matches && menuOpen) setMenu(false); });
+
+  /* ---- in-page links glide with Lenis (native smooth scroll otherwise) ---- */
+  document.addEventListener('click', function (e) {
+    var a = e.target.closest ? e.target.closest('a[href^="#"]') : null;
+    if (!a) return;
+    var id = a.getAttribute('href'), el = id.length > 1 ? document.getElementById(id.slice(1)) : null;
+    if (!el) return;
+    if (menuOpen) setMenu(false);
+    if (!lenis) return;
+    e.preventDefault();
+    lenis.scrollTo(id === '#intro' ? 0 : el, { duration: 1.6 });
+    history.replaceState(null, '', id);
+  });
+
+  /* ---- reveal on scroll ---- */
+  var revealEls = [].slice.call(document.querySelectorAll('[data-reveal]'));
+  if (!reduce && 'IntersectionObserver' in window) {
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) { if (en.isIntersecting) { en.target.classList.add('is-in'); io.unobserve(en.target); } });
+    }, { rootMargin: '0px 0px -10% 0px' });
+    revealEls.forEach(function (el) { io.observe(el); });
+  } else {
+    revealEls.forEach(function (el) { el.classList.add('is-in'); });
+  }
 
   /* ---- nav ---- */
   var nav = document.getElementById('nav');
@@ -453,19 +606,25 @@ fieldset.field{border:0;margin:0;padding:0}
   }
 
   /* ---- form ---- */
-  var choices = [].slice.call(document.querySelectorAll('#choices button'));
-  choices.forEach(function (b) {
-    b.addEventListener('click', function () { choices.forEach(function (c) { c.setAttribute('aria-pressed', c === b ? 'true' : 'false'); }); });
-  });
-  [].slice.call(document.querySelectorAll('[data-subject]')).forEach(function (a) {
-    a.addEventListener('click', function () { document.getElementById('f-subject').value = a.getAttribute('data-subject'); });
-  });
   var form = document.getElementById('form'), statusEl = document.getElementById('formStatus');
+  var nameIn = document.getElementById('f-name'), contactIn = document.getElementById('f-contact');
+  [nameIn, contactIn].forEach(function (inp) {
+    inp.addEventListener('input', function () { inp.removeAttribute('aria-invalid'); statusEl.textContent = ''; });
+  });
+  // focus without a native scroll jump; glide to the field if it is off screen
+  function focusField(el) {
+    el.focus({ preventScroll: true });
+    var r = el.getBoundingClientRect();
+    if (r.top < 60 || r.bottom > window.innerHeight - 20) {
+      if (lenis) lenis.scrollTo(el, { offset: -window.innerHeight / 3, duration: 0.8 });
+      else el.scrollIntoView({ block: 'center' });
+    }
+  }
   form.addEventListener('submit', function (e) {
     e.preventDefault();
-    var name = document.getElementById('f-name'), contact = document.getElementById('f-contact');
-    if (!name.value.trim()) { statusEl.textContent = 'БУДЬ ЛАСКА, ВКАЖІТЬ ВАШЕ ІМ\'Я.'; name.focus(); return; }
-    if (!contact.value.trim()) { statusEl.textContent = 'ВКАЖІТЬ ТЕЛЕФОН, INSTAGRAM АБО EMAIL, ЩОБ МИ МОГЛИ ВІДПОВІСТИ.'; contact.focus(); return; }
+    var name = nameIn, contact = contactIn;
+    if (!name.value.trim()) { name.setAttribute('aria-invalid', 'true'); statusEl.textContent = 'БУДЬ ЛАСКА, ВКАЖІТЬ ВАШЕ ІМ\'Я.'; focusField(name); return; }
+    if (!contact.value.trim()) { contact.setAttribute('aria-invalid', 'true'); statusEl.textContent = 'ВКАЖІТЬ ТЕЛЕФОН, INSTAGRAM АБО EMAIL, ЩОБ МИ МОГЛИ ВІДПОВІСТИ.'; focusField(contact); return; }
     statusEl.textContent = 'ДЯКУЄМО. ЦЕ ПОПЕРЕДНЯ ФОРМА, ВОНА ЩЕ НЕ ПІДКЛЮЧЕНА, ТОМУ ЗАПИТ НЕ НАДІСЛАНО.';
   });
 
@@ -482,9 +641,161 @@ fieldset.field{border:0;margin:0;padding:0}
     });
   }
 
-  var benchEl = document.getElementById('bench');
-  function fadeHero() { if (!benchEl) return; var p = Math.min(1, Math.max(0, (window.scrollY || 0) / (window.innerHeight * 0.75))); benchEl.style.opacity = (1 - p * p * (3 - 2 * p)).toFixed(3); }
-  function tickPage() { fadeHero(); updateNav(); return updateStages(stageProgress() * 3); }
+  /* ---- hero: the bench fades and the wordmark drifts out of focus as you leave ---- */
+  var benchEl = document.getElementById('bench'), heroCopy = document.querySelector('.hero-copy');
+  function fadeHero() {
+    var p = clamp((window.scrollY || 0) / (window.innerHeight * 0.75), 0, 1), e = p * p * (3 - 2 * p);
+    if (benchEl) benchEl.style.opacity = (1 - e).toFixed(3);
+    if (heroCopy && !reduce) {
+      heroCopy.style.opacity = (1 - e * 0.85).toFixed(3);
+      heroCopy.style.filter = p > 0.001 ? 'blur(' + (e * 8).toFixed(2) + 'px)' : '';
+      heroCopy.style.transform = p > 0.001 ? 'translate3d(0,' + (-e * 40).toFixed(1) + 'px,0)' : '';
+    }
+  }
+
+  /* ---- collection rail: the section pins and the cards slide past; the one nearest the focus stays brightest ---- */
+  var coll = document.getElementById('icons'), collPin = document.getElementById('collPin'), rail = document.getElementById('rail');
+  var railCards = [].slice.call(rail.querySelectorAll('.card'));
+  var collNum = document.getElementById('collNum'), collBar = document.getElementById('collBar');
+  var railOn = !reduce, railMax = 0, railStart = 0, railFocus0 = 0, railFocus1 = 0, railIdx = -1;
+  if (railOn) coll.classList.add('is-rail');
+  function layoutRail() {
+    if (!railOn) return;
+    var vw = collPin.clientWidth;
+    railStart = rail.offsetLeft;
+    railMax = Math.max(0, railStart + rail.scrollWidth - vw + parseFloat(getComputedStyle(collPin).paddingRight));
+    var first = railCards[0], last = railCards[railCards.length - 1];
+    railFocus0 = railStart + first.offsetLeft + first.offsetWidth / 2;
+    railFocus1 = railStart + last.offsetLeft + last.offsetWidth / 2 - railMax;
+  }
+  function railScroll() {
+    var span = coll.offsetHeight - window.innerHeight;
+    return span > 0 ? clamp(-coll.getBoundingClientRect().top / span, 0, 1) : 0;
+  }
+  function updateRail() {
+    if (!railOn) return;
+    var r = coll.getBoundingClientRect();
+    if (r.bottom < 0 || r.top > window.innerHeight) return;
+    var q = clamp((railScroll() - 0.04) / 0.92, 0, 1), x = q * railMax, vw = collPin.clientWidth, best = 0, bestD = Infinity;
+    var focus = railFocus0 + (railFocus1 - railFocus0) * q;
+    rail.style.transform = 'translate3d(' + (-x).toFixed(1) + 'px,0,0)';
+    railCards.forEach(function (c, i) {
+      var d = (railStart + c.offsetLeft + c.offsetWidth / 2 - x - focus) / vw, k = clamp(Math.abs(d) * 1.6, 0, 1);
+      c.style.opacity = (1 - k * 0.55).toFixed(3);
+      c.style.transform = 'scale(' + (1 - k * 0.07).toFixed(4) + ')';
+      if (Math.abs(d) < bestD) { bestD = Math.abs(d); best = i; }
+    });
+    collBar.style.transform = 'scaleX(' + q.toFixed(4) + ')';
+    if (best !== railIdx) { railIdx = best; collNum.textContent = '0' + (best + 1); }
+  }
+  // keyboard focus on an off-screen card scrolls the page to the point where that card sits in focus
+  rail.addEventListener('focusin', function (e) {
+    if (!railOn || !railMax) return;
+    collPin.scrollLeft = 0;
+    var c = e.target.closest('.card');
+    if (!c) return;
+    var q = clamp((railStart + c.offsetLeft + c.offsetWidth / 2 - railFocus0) / (railMax + railFocus1 - railFocus0), 0, 1);
+    var top = coll.getBoundingClientRect().top + window.scrollY;
+    scrollToY(top + (q * 0.92 + 0.04) * (coll.offsetHeight - window.innerHeight));
+  });
+
+  /* ---- workshop drawing: board outline, height, halo, width — one leg per stage, a dot leads the line ---- */
+  var draft = document.getElementById('draft'), draftSlot = draft.parentNode, draftPct = document.getElementById('draftPct');
+  var SVGNS = 'http://www.w3.org/2000/svg', legs = [], draftLabels = [], tip = null;
+  function svgEl(tag, attrs, parent) {
+    var el = document.createElementNS(SVGNS, tag);
+    for (var k in attrs) el.setAttribute(k, attrs[k]);
+    (parent || draft).appendChild(el);
+    return el;
+  }
+  function layoutDraft() {
+    var w = draftSlot.clientWidth, h = draftSlot.clientHeight;
+    if (!w || !h) return;
+    while (draft.firstChild) draft.removeChild(draft.firstChild);
+    draft.setAttribute('viewBox', '0 0 ' + w + ' ' + h);
+    // the board's footprint matches how the 3D icon is fitted into this slot
+    var phone = window.innerWidth <= 760, bh = h * (phone ? 0.84 : 0.92), bw = bh * 0.75;
+    var cx = w / 2, cy = h / 2, pad = 12;
+    var x0 = cx - bw / 2 - pad, x1 = cx + bw / 2 + pad, y0 = cy - bh / 2 - pad, y1 = cy + bh / 2 + pad;
+    var lx = x0 - 22, by = y1 + 22, r = bw * (phone ? 0.57 : 0.62), hy = y0 + bw * (phone ? 0.45 : 0.42);
+    var f = function (n) { return n.toFixed(1); };
+    legs = [
+      'M' + f(x0) + ' ' + f(y0) + 'H' + f(x1) + 'V' + f(y1) + 'H' + f(x0) + 'Z',
+      'M' + f(lx - 6) + ' ' + f(y0) + 'H' + f(lx + 6) + 'M' + f(lx) + ' ' + f(y0) + 'V' + f(y1) + 'M' + f(lx - 6) + ' ' + f(y1) + 'H' + f(lx + 6),
+      'M' + f(cx - r) + ' ' + f(hy) + 'A' + f(r) + ' ' + f(r) + ' 0 0 1 ' + f(cx + r) + ' ' + f(hy),
+      'M' + f(x0) + ' ' + f(by - 6) + 'V' + f(by + 6) + 'M' + f(x0) + ' ' + f(by) + 'H' + f(x1) + 'M' + f(x1) + ' ' + f(by - 6) + 'V' + f(by + 6)
+    ].map(function (d) {
+      svgEl('path', { d: d, 'class': 'guide' });
+      return svgEl('path', { d: d, 'class': 'live', pathLength: 1, 'stroke-dasharray': '1 1', 'stroke-dashoffset': 1 });
+    });
+    draftLabels = [
+      svgEl('text', { x: f(lx - 10), y: f(cy), 'text-anchor': 'middle', transform: 'rotate(-90 ' + f(lx - 10) + ' ' + f(cy) + ')' }),
+      svgEl('text', { x: f(cx), y: f(by + 20), 'text-anchor': 'middle' })
+    ];
+    draftLabels[0].textContent = 'ВИСОТА';
+    draftLabels[1].textContent = 'ШИРИНА';
+    tip = svgEl('g', {});
+    svgEl('circle', { r: 9, 'class': 'tip-halo' }, tip);
+    svgEl('circle', { r: 3.5, 'class': 'tip-core' }, tip);
+  }
+  function updateDraft(prog) {
+    if (!legs.length) return;
+    var q = clamp(prog * 4, 0, 4), cur = Math.min(3, Math.floor(q));
+    legs.forEach(function (path, k) {
+      var e = ease(clamp(q - k, 0, 1));
+      path.style.strokeDashoffset = String(1 - e);
+      if (k === cur) {
+        var pt = path.getPointAtLength(path.getTotalLength() * e);
+        tip.setAttribute('transform', 'translate(' + pt.x.toFixed(1) + ' ' + pt.y.toFixed(1) + ')');
+      }
+    });
+    draftLabels[0].style.opacity = ease(clamp(q - 1, 0, 1));
+    draftLabels[1].style.opacity = ease(clamp(q - 3, 0, 1));
+    draftPct.textContent = Math.round(prog * 100);
+  }
+
+  /* ---- countdown to the next feast (date from data-month / data-day) ---- */
+  var cd = document.getElementById('countdown');
+  if (cd) {
+    var cdN = {}, cdRow = document.getElementById('cdRow'), cdMin = -1;
+    var cdMonth = parseInt(cd.getAttribute('data-month'), 10) - 1, cdDay = parseInt(cd.getAttribute('data-day'), 10);
+    [].slice.call(cd.querySelectorAll('[data-cd]')).forEach(function (el) { cdN[el.getAttribute('data-cd')] = el; });
+    var pad2 = function (n) { return (n < 10 ? '0' : '') + n; };
+    var tickCd = function () {
+      var now = new Date(), t = new Date(now.getFullYear(), cdMonth, cdDay);
+      if (now - t >= 864e5) t = new Date(now.getFullYear() + 1, cdMonth, cdDay); // the feast day itself shows zeros
+      var sec = Math.max(0, Math.floor((t - now) / 1000));
+      var d = Math.floor(sec / 86400), h = Math.floor(sec % 86400 / 3600), m = Math.floor(sec % 3600 / 60);
+      cdN.d.textContent = pad2(d); cdN.h.textContent = pad2(h); cdN.m.textContent = pad2(m); cdN.s.textContent = pad2(sec % 60);
+      if (m !== cdMin) { cdMin = m; cdRow.setAttribute('aria-label', d + ' дн. ' + h + ' год. ' + m + ' хв. до Різдва Христового'); }
+    };
+    tickCd();
+    setInterval(tickCd, 1000);
+  }
+
+  /* ---- one loop for everything; page work is skipped while scroll and size stand still ---- */
+  var lastY = -1, lastW = 0, lastH = 0, lastStage = 0, dirty = true;
+  function markDirty() { dirty = true; }
+  window.addEventListener('resize', markDirty);
+  window.addEventListener('load', markDirty);
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(markDirty);
+  function tickPage() {
+    var y = window.scrollY, w = window.innerWidth, h = window.innerHeight;
+    if (!dirty && y === lastY && w === lastW && h === lastH) return lastStage;
+    if (dirty || w !== lastW || h !== lastH) { layoutRail(); layoutDraft(); }
+    dirty = false; lastY = y; lastW = w; lastH = h;
+    fadeHero(); updateNav(); updateRail();
+    var prog = stageProgress();
+    updateDraft(prog);
+    return (lastStage = updateStages(prog * 3));
+  }
+  var draw3d = null;
+  function loop(now) {
+    requestAnimationFrame(loop);
+    if (lenis) lenis.raf(now);
+    var stage = tickPage();
+    if (draw3d) draw3d(now, stage);
+  }
 
   /* ---- 3D icon ---- */
   var canvas = document.getElementById('stage');
@@ -496,11 +807,7 @@ fieldset.field{border:0;margin:0;padding:0}
   }
   if (!renderer) {
     canvas.style.display = 'none';
-    var pending = false;
-    var onScroll = function () { if (pending) return; pending = true; requestAnimationFrame(function () { pending = false; tickPage(); }); };
-    window.addEventListener('scroll', onScroll, { passive: true });
-    window.addEventListener('resize', onScroll);
-    tickPage();
+    requestAnimationFrame(loop);
     return;
   }
   root.classList.add('has-3d');
@@ -620,9 +927,8 @@ fieldset.field{border:0;margin:0;padding:0}
   };
 
   var halfFov = THREE.MathUtils.degToRad(15);
-  function frame(now) {
-    requestAnimationFrame(frame);
-    var stage = tickPage();
+  var wasVisible = false;
+  draw3d = function (now, stage) {
     if (!ready) return;
 
     var vw = window.innerWidth, vh = window.innerHeight, vc = vh / 2;
@@ -677,7 +983,8 @@ fieldset.field{border:0;margin:0;padding:0}
     group.position.set(x, y, 0);
     group.rotation.set(rx, ry, rz);
     group.scale.setScalar(s);
-    group.visible = op > 0.003;
+    var visible = op > 0.003;
+    group.visible = visible;
     mats.forEach(function (m) { m.opacity = op; });
 
     var lifted = (1 - sh) + (1 - intro) * sh;
@@ -685,8 +992,11 @@ fieldset.field{border:0;margin:0;padding:0}
     shadow.position.set(-0.2 - lifted * 0.5, -0.28 - lifted * 0.6, -BD / 2 - 0.02);
     shadow.scale.setScalar(1 + lifted * 0.25);
 
+    // nothing on screen: render one clearing frame, then rest until the icon returns
+    if (!visible && !wasVisible) return;
+    wasVisible = visible;
     renderer.render(scene, camera);
-  }
-  requestAnimationFrame(frame);
+  };
+  requestAnimationFrame(loop);
 })();
 </script>
